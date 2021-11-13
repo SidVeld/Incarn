@@ -1,0 +1,126 @@
+# INT
+logic:
+  name:        LOGIC
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/2/29/Portrait_logic.png
+  color:       0x5bc3d7
+
+encyclopedia:
+  name:        ENCYCLOPEDIA
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/7/72/Portrait_encyclopedia.png
+  color:       0x5bc3d7
+
+rhetoric:
+  name:        RHETORIC
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/7/7b/Portrait_rhetoric.png
+  color:       0x5bc3d7
+
+drama:
+  name:        DRAMA
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/2/28/Portrait_drama_rank1.png
+  color:       0x5bc3d7
+
+conceptualization:
+  name:        CONCEPTUALIZATION
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/7/74/Portrait_conceptualization_rank1.png
+  color:       0x5bc3d7
+
+visual_calculus:
+  name:        VISUAL CALCULUS
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/f/f2/Portrait_visual-calculus_rank1.png
+  color:       0x5bc3d7
+
+
+# PSY
+volition:
+  name:        VOLITION
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/8/83/Portrait_volition.png
+  color:       0x7454ce
+
+inland_empire:
+  name:        INLAND EMPIRE
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/2/28/Portrait_inland-empire.png
+  color:       0x7454ce
+
+empathy:
+  name:        EMPATHY
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/9/95/Portrait_empathy.png
+  color:       0x7454ce
+
+authority:
+  name:        AUTHORITY
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/4/43/Portrait_authority.png
+  color:       0x7454ce
+
+esprit_de_corps:
+  name:        ESPIRIT DE CORPS
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/7/72/Portrait_esprit-de-Corps.png
+  color:       0x7454ce
+
+suggestion:
+  name:        SUGGESTION
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/e/e5/Portrait_suggestion.png
+  color:       0x7454ce
+
+
+# Сила
+endurance:
+  name:        ENDURANCE
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/0/03/Portrait_endurance.png
+  color:       0xcb466a
+
+pain_threshold:
+  name:        PAIN THRESHOLD
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/7/75/Portrait_pain-threshold.png
+  color:       0xcb466a
+
+physical_instrument:
+  name:        PHYSICAL INSTRUMENT
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/e/ea/Portrait_physical-instrument.png
+  color:       0xcb466a
+
+electro_chemistry:
+  name:        ELECTRO CHEMISTRY
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/f/f9/Portrait_electrochemistry.png
+  color:       0xcb466a
+
+shivers:
+  name:        SHIVERS
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/2/2d/Portrait_shivers.png
+  color:       0xcb466a
+
+half_light:
+  name:        HALF-LIGHT
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/a/a0/Portrait_half-light.png
+  color:       0xcb466a
+
+
+# Моторика
+hand_eye_coordination:
+  name:        HAND EYE COORDINATION
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/5/50/Portrait_he_coordination.png
+  color:       0xe3b834
+
+perception:
+  name:        PERCEPTION
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/5/56/Portrait_perception.png
+  color:       0xe3b834
+
+reaction_speed:
+  name:        REACTION SPEED
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/3/30/Portrait_reaction.png
+  color:       0xe3b834
+
+savoir_faire:
+  name:        SAVOIR FAIRE
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/8/8a/Portrait_savoir-faire.png
+  color:       0xe3b834
+
+interfacing:
+  name:        INTERFACING
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/7/7d/Portrait_interfacing.png
+  color:       0xe3b834
+
+composure:
+  name:        COMPOSURE
+  portrait:    https://static.wikia.nocookie.net/discoelysium_gamepedia_en/images/f/ff/Portrait_composure.png
+  color:       0xe3b834

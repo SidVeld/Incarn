@@ -1,0 +1,12 @@
+
+core_book_eng:
+  name: Core Book (English)
+  url:  https://vk.com/doc2407817_444004768?hash=f1f509372546f7e8c4&dl=f8ce134638a8252dea
+  source: vk.com
+  format: PDF
+
+core_book_rus:
+  name: Core Book (Russian)
+  url:  https://vk.com/doc295448490_510389984?hash=fa3bd33f7c6c570330&dl=da81c636751ebf3359
+  source: vk.com
+  format: PDF
