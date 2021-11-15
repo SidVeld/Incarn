@@ -26,13 +26,6 @@ class DH_Colours:
     dark_green = 0x27ae60
 
 
-class RollResults:
-    CRITICAL_SUCCESS = 3
-    SUCCESS = 2
-    FAILURE = 1
-    CRITICAL_FAILURE = 0
-
-
 class DarkHeresy(commands.Cog):
     """Cog for Dark Heresy commands."""
 
@@ -74,7 +67,7 @@ class DarkHeresy(commands.Cog):
 
         Don't forget that Psykers have a unique "doubles" mechanic.
         """
-        emb = discord.Embed(description="")
+        emb = discord.Embed()
 
         dice = random.randint(1, 100)
         total = dice + mod

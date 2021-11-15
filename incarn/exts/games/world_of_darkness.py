@@ -14,13 +14,6 @@ class RollColors:
     failure_crit = 0xeb2f06
 
 
-class RollResults:
-    CRITICAL_SUCCESS = 3
-    SUCCESS = 2
-    FAILURE = 1
-    CRITICAL_FAILURE = 0
-
-
 class WorldOfDarkness(commands.Cog):
     """Cog for World Of Darkness commands."""
 
@@ -50,7 +43,7 @@ class WorldOfDarkness(commands.Cog):
         If the player has exactly 0 successes, the player fails the check.
         If the player has less than 0 successes, the player fails the test with the indicator "Critical".
         """
-        emb = discord.Embed(description="")
+        emb = discord.Embed()
 
         if dices > 20 or dices <= 0:
             emb.title = "Please, stop!"
@@ -121,7 +114,7 @@ class WorldOfDarkness(commands.Cog):
         If the player manages to score 5 successes in a longer or shorter time,
         then the vampire manages to cope with the urges of the Beast.
         """
-        embed = discord.Embed(description="")
+        embed = discord.Embed()
 
         successes = 0
         roll_list = []

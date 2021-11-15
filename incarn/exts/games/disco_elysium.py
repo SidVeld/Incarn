@@ -18,13 +18,6 @@ class DiscoColors:
     disco_yellow = 0xe3b834
 
 
-class RollResults:
-    CRITICAL_SUCCESS = 3
-    SUCCESS = 2
-    FAILURE = 1
-    CRITICAL_FAILURE = 0
-
-
 class DiscoElysium(commands.Cog):
     """Cog for Disco Elysium commands."""
 
@@ -52,7 +45,7 @@ class DiscoElysium(commands.Cog):
         Please note that if you get two ones, you will automatically fail the roll marked "critical failure". \
         The same goes for the two sixes, but in the opposite direction.
         """
-        emb = discord.Embed(description="", color=DiscoColors.disco_orange)
+        emb = discord.Embed()
 
         if skill_level <= 0 or skill_level > 20:
             emb.title = "Sir, stop!"
@@ -74,29 +67,22 @@ class DiscoElysium(commands.Cog):
         total = skill_level + dice_summ + mod
 
         if dice_1 == dice_2 == 6:
-            result = RollResults.CRITICAL_SUCCESS
+            result = "CRITICAL SUCCESS"
         elif dice_1 == dice_2 == 1:
-            result = RollResults.CRITICAL_FAILURE
+            result = "CRITICAL FAILURE"
         elif total >= difficult:
-            result = RollResults.SUCCESS
+            result = "SUCCESS"
         else:
-            result = RollResults.FAILURE
+            result = "FAILURE"
 
         match result:
-            case RollResults.CRITICAL_SUCCESS:
-                emb.set_author(name="CRITICAL SUCCESS")
+            case "CRITICAL SUCCESS":
                 emb.color = DiscoColors.disco_green
-
-            case RollResults.SUCCESS:
-                emb.set_author(name="SUCCESS")
+            case "SUCCESS":
                 emb.color = DiscoColors.disco_green
-
-            case RollResults.FAILURE:
-                emb.set_author(name="FAILURE")
+            case "FAILURE":
                 emb.color = DiscoColors.disco_orange
-
-            case RollResults.CRITICAL_FAILURE:
-                emb.set_author(name="CRITICAL FAILURE")
+            case "CRITICAL FAILURE":
                 emb.color = DiscoColors.disco_orange
 
         match difficult:
@@ -107,9 +93,9 @@ class DiscoElysium(commands.Cog):
             case 18:
                 difficult_text = "Impossible"
             case 17:
-                difficult_text = "Godly "
+                difficult_text = "Godly"
             case 16:
-                difficult_text = "Godly "
+                difficult_text = "Godly"
             case 15:
                 difficult_text = "Heroic"
             case 14:
@@ -143,6 +129,7 @@ class DiscoElysium(commands.Cog):
 
         emb.description = textwrap.dedent(roll_info)
 
+        emb.set_author(name=result)
         emb.set_footer(text="1:1 - Crit Failure. 6:6 - Crit Success.")
 
         await ctx.send(embed=emb)
@@ -154,7 +141,7 @@ class DiscoElysium(commands.Cog):
 
         Spaces and dashes should be replaced with underscore (`_`)
         """
-        embed = discord.Embed(description="")
+        embed = discord.Embed()
 
         skill_list = load_game_reource("disco_elysium", "skills")
 
