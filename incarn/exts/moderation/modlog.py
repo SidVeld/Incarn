@@ -362,6 +362,70 @@ class ModLog(Cog, name="ModLog"):
             channel_id=Channels.user_log
         )
 
+    @staticmethod
+    def get_role_diff(before: List[discord.Role], after: List[discord.Role]) -> List[str]:
+        """Return a list of strings describing the roles added and removed."""
+        changes = []
+        before_roles = set(before)
+        after_roles = set(after)
+
+        for role in (before_roles - after_roles):
+            changes.append(f"**Role removed:** {role.name} (`{role.id}`)")
+
+        for role in (after_roles - before_roles):
+            changes.append(f"**Role added:** {role.name} (`{role.id}`)")
+
+        return changes
+
+    @Cog.listener()
+    async def on_member_update(self, before: discord.Member, after: discord.Member) -> None:
+        """Log member update event to user log."""
+        if before.guild.id != GuildConstant.id:
+            return
+
+        if before.id in self._ignored[Event.member_update]:
+            self._ignored[Event.member_update].remove(before.id)
+
+        changes = self.get_role_diff(before.roles, after.roles)
+
+        # The regex is a simple way to exclude all sequence and mapping types.
+        diff = DeepDiff(before, after, exclude_regex_paths=r".*\[.*")
+
+        # A type change seems to always take precedent over a value change. Furthermore, it will
+        # include the value change along with the type change anyway. Therefore, it's OK to
+        # "overwrite" values_changed; in practice there will never even be anything to overwrite.
+        diff_values = {**diff.get("values_changed", {}), **diff.get("type_changes", {})}
+
+        for attr, value in diff_values.items():
+            if not attr:  # Not sure why, but it happens.
+                continue
+
+            attr = attr[5:]  # Remove "root." prefix.
+            attr = attr.replace("_", " ").replace(".", " ").capitalize()
+
+            new = value.get("new_value")
+            old = value.get("old_value")
+
+            changes.append(f"**{attr}:** `{old}` **→** `{new}`")
+
+        if not changes:
+            return
+
+        message = ""
+
+        for item in sorted(changes):
+            message += f"-> {item}\n"
+
+        message = f"{format_user(after)}\n{message}"
+
+        await self.send_log_message(
+            title="Member updated",
+            text=message,
+            thumbnail=after.avatar_url,
+            colour=Colours.orange,
+            channel_id=Channels.user_log
+        )
+
     @Cog.listener()
     async def on_guild_update(self, before: discord.Guild, after: discord.Guild) -> None:
         if before.id != GuildConstant.id:
