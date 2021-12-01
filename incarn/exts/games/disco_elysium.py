@@ -75,15 +75,24 @@ class DiscoElysium(commands.Cog):
         else:
             result = "FAILURE"
 
-        match result:
-            case "CRITICAL SUCCESS":
-                emb.color = DiscoColors.disco_green
-            case "SUCCESS":
-                emb.color = DiscoColors.disco_green
-            case "FAILURE":
-                emb.color = DiscoColors.disco_orange
-            case "CRITICAL FAILURE":
-                emb.color = DiscoColors.disco_orange
+        if result == "CRITICAL SUCCESS":
+            emb.color = DiscoColors.disco_green
+        elif result == "SUCESS":
+            emb.color = DiscoColors.disco_green
+        elif result == "FAILURE":
+            emb.color = DiscoColors.disco_orange
+        elif result == "CRITICAL FAILURE":
+            emb.color = DiscoColors.disco_orange
+
+        # match result:
+        #     case "CRITICAL SUCCESS":
+        #         emb.color = DiscoColors.disco_green
+        #     case "SUCCESS":
+        #         emb.color = DiscoColors.disco_green
+        #     case "FAILURE":
+        #         emb.color = DiscoColors.disco_orange
+        #     case "CRITICAL FAILURE":
+        #         emb.color = DiscoColors.disco_orange
 
         # match difficult:
         #     case 20:
