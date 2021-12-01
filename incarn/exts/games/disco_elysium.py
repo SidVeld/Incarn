@@ -85,40 +85,40 @@ class DiscoElysium(commands.Cog):
             case "CRITICAL FAILURE":
                 emb.color = DiscoColors.disco_orange
 
-        match difficult:
-            case 20:
-                difficult_text = "Impossible"
-            case 19:
-                difficult_text = "Impossible"
-            case 18:
-                difficult_text = "Impossible"
-            case 17:
-                difficult_text = "Godly"
-            case 16:
-                difficult_text = "Godly"
-            case 15:
-                difficult_text = "Heroic"
-            case 14:
-                difficult_text = "Legendary"
-            case 13:
-                difficult_text = "Formidable"
-            case 12:
-                difficult_text = "Challenging"
-            case 11:
-                difficult_text = "Medium"
-            case 10:
-                difficult_text = "Medium"
-            case 9:
-                difficult_text = "Easy"
-            case 8:
-                difficult_text = "Easy"
-            case _:
-                difficult_text = "Trival"
+        # match difficult:
+        #     case 20:
+        #         difficult_text = "Impossible"
+        #     case 19:
+        #         difficult_text = "Impossible"
+        #     case 18:
+        #         difficult_text = "Impossible"
+        #     case 17:
+        #         difficult_text = "Godly"
+        #     case 16:
+        #         difficult_text = "Godly"
+        #     case 15:
+        #         difficult_text = "Heroic"
+        #     case 14:
+        #         difficult_text = "Legendary"
+        #     case 13:
+        #         difficult_text = "Formidable"
+        #     case 12:
+        #         difficult_text = "Challenging"
+        #     case 11:
+        #         difficult_text = "Medium"
+        #     case 10:
+        #         difficult_text = "Medium"
+        #     case 9:
+        #         difficult_text = "Easy"
+        #     case 8:
+        #         difficult_text = "Easy"
+        #     case _:
+        #         difficult_text = "Trival"
 
         roll_info = f"""
         Here you can learn more about your roll.
 
-        **Difficult**: {difficult_text} ({difficult})
+        **Difficult**: ({difficult})
         VS
         **Total (you have)**: {total}
         ────────────────────────
