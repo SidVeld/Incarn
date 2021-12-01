@@ -99,7 +99,7 @@ class DarkHeresy(commands.Cog):
 
         if result == "CRITICAL SUCCESS":
             emb.color = DH_Colours.yellow
-        elif result == "SUCESS":
+        elif result == "SUCCESS":
             emb.color = DH_Colours.green
         elif result == "FAILURE":
             emb.color = DH_Colours.orange

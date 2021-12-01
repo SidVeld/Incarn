@@ -77,7 +77,7 @@ class DiscoElysium(commands.Cog):
 
         if result == "CRITICAL SUCCESS":
             emb.color = DiscoColors.disco_green
-        elif result == "SUCESS":
+        elif result == "SUCCESS":
             emb.color = DiscoColors.disco_green
         elif result == "FAILURE":
             emb.color = DiscoColors.disco_orange
