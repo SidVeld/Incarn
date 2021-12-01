@@ -81,18 +81,30 @@ class DarkHeresy(commands.Cog):
         else:
             result = "FAILURE"
 
-        match result:
-            case "CRITICAL SUCCESS":
-                emb.color = DH_Colours.yellow
+        # =====
+        # Disabled untill 3.10
+        # =====
+        # match result:
+        #     case "CRITICAL SUCCESS":
+        #         emb.color = DH_Colours.yellow
 
-            case "SUCCESS":
-                emb.color = DH_Colours.green
+        #     case "SUCCESS":
+        #         emb.color = DH_Colours.green
 
-            case "FAILURE":
-                emb.color = DH_Colours.orange
+        #     case "FAILURE":
+        #         emb.color = DH_Colours.orange
 
-            case "CRITICAL FAILURE":
-                emb.color = DH_Colours.red
+        #     case "CRITICAL FAILURE":
+        #         emb.color = DH_Colours.red
+
+        if result == "CRITICAL SUCCESS":
+            emb.color = DH_Colours.yellow
+        elif result == "SUCESS":
+            emb.color = DH_Colours.green
+        elif result == "FAILURE":
+            emb.color = DH_Colours.orange
+        elif result == "CRITICAL FAILURE":
+            emb.color = DH_Colours.red
 
         emb.set_author(name=result)
 
