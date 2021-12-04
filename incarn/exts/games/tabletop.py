@@ -2,7 +2,9 @@ import re
 import random
 
 import discord
+from discord import Embed
 from discord.ext import commands
+from discord.ext.commands.context import Context
 
 from incarn.bot import IncarnBot
 from incarn.constants import Colours
@@ -11,8 +13,15 @@ from incarn.constants import Colours
 class TableTop(commands.Cog):
     """Cog for classic tabletop commands."""
 
+    def __init__(self, bot: IncarnBot) -> None:
+        self.bot = bot
+
+        self.current_queue = []
+        self.current_turn = 1
+        self.queue_loop = 1
+
     @commands.command(name="roll", aliases=["r"])
-    async def roll_command(self, ctx: commands.Context, dice: str, mod: int = 0):
+    async def roll_command(self, ctx: Context, dice: str, mod: int = 0):
         """
         Classic dice roller.
 
@@ -52,6 +61,116 @@ class TableTop(commands.Cog):
 
         await ctx.send(embed=embed)
 
+    def reset_current_queue(self) -> None:
+        """Resets queue."""
+        self.current_queue = []
+        self.current_turn = 1
+        self.queue_loop = 1
+
+    def wrapped_queue(self) -> Embed:
+        """Wraps queue into Embed."""
+        final_queue = ""
+
+        embed = Embed()
+
+        for character in self.current_queue:
+            position = self.current_queue.index(character) + 1
+            if position == self.current_turn:
+                final_queue += f"{position}: **{character}**\n"
+                moving_character = character
+            else:
+                final_queue += f"{position}: {character}\n"
+            embed.description = final_queue.replace("-", " ")
+
+        embed.set_author(name="Current queue")
+
+        embed.add_field(
+            name="Current turn:",
+            value=moving_character,
+            inline=True
+        )
+
+        embed.add_field(
+            name="Current loop:",
+            value=self.queue_loop,
+            inline=True
+        )
+
+        return embed
+
+    @commands.group(name="queue", aliases=("q",))
+    async def queue(self, ctx: Context):
+        """
+        Commands for creating queue with characters. Good for battles.
+        """
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(str(ctx.command))
+
+    @queue.command(name="create", aliases=("c", "cr"))
+    async def queue_create(self, ctx: Context, *characters):
+        """
+        Creates queue with characters.
+
+        The queue is made up of sequentially entered character names.
+        """
+        if len(characters) == 0:
+            return
+
+        self.reset_current_queue()
+
+        for character in characters:
+            self.current_queue.append(character.replace("-", " "))
+
+        embed = self.wrapped_queue()
+
+        await ctx.send("Queue created!", embed=embed)
+
+    @queue.command(name="show", aliases=("s", "shw"))
+    async def queue_show(self, ctx: Context):
+        """
+        Shows current queue.
+        """
+
+        queue = self.current_queue
+
+        if len(queue) == 0:
+            return
+
+        self.reset_current_queue()
+
+        for character in queue:
+            self.current_queue.append(character.replace("-", " "))
+
+        embed = self.wrapped_queue()
+
+        await ctx.send(embed=embed)
+
+    @queue.command(name="next", aliases=("n", "nxt"))
+    async def queue_next(self, ctx: Context):
+        """
+        Shows, if created, current queue.
+        """
+
+        if len(self.current_queue) == 0:
+            return
+
+        queue = self.current_queue
+
+        self.current_turn += 1
+
+        if self.current_turn > len(queue):
+            self.current_turn = 1
+            self.queue_loop += 1
+
+        embed = self.wrapped_queue()
+
+        await ctx.send(embed=embed)
+
+    @queue.command(name="reset", aliases=("r", "rs", "rst"))
+    async def queue_reset(self, ctx: Context):
+        """Resets current queue. DANGEROUS!"""
+        self.reset_current_queue()
+
 
 def setup(bot: IncarnBot):
-    bot.add_cog(TableTop())
+    bot.add_cog(TableTop(bot))
