@@ -53,7 +53,7 @@ class TableTop(commands.Cog):
         result = ", ".join(str(roll) for roll in rolls)
 
         if mod:
-            result += f"\n\n**Modded** ({mod})\n" + ", ".join(str(roll) for roll in rolls_modded)
+            result += f"\n**Modded** ({mod})\n" + ", ".join(str(roll) for roll in rolls_modded)
 
         embed = discord.Embed(colour=Colours.blue)
         embed.set_author(name="Roll result")
@@ -62,13 +62,17 @@ class TableTop(commands.Cog):
         await ctx.send(embed=embed)
 
     def reset_current_queue(self) -> None:
-        """Resets queue."""
+        """
+        Resets queue.
+        """
         self.current_queue = []
         self.current_turn = 1
         self.queue_loop = 1
 
     def wrapped_queue(self) -> Embed:
-        """Wraps queue into Embed."""
+        """
+        Wraps queue into Embed.
+        """
         final_queue = ""
 
         embed = Embed()
@@ -128,18 +132,10 @@ class TableTop(commands.Cog):
     @queue.command(name="show", aliases=("s", "shw"))
     async def queue_show(self, ctx: Context):
         """
-        Shows current queue.
+        Shows, if created, current queue.
         """
-
-        queue = self.current_queue
-
-        if len(queue) == 0:
+        if len(self.current_queue) == 0:
             return
-
-        self.reset_current_queue()
-
-        for character in queue:
-            self.current_queue.append(character.replace("-", " "))
 
         embed = self.wrapped_queue()
 
@@ -148,17 +144,14 @@ class TableTop(commands.Cog):
     @queue.command(name="next", aliases=("n", "nxt"))
     async def queue_next(self, ctx: Context):
         """
-        Shows, if created, current queue.
+        Transfers the right to move to the next character.
         """
-
         if len(self.current_queue) == 0:
             return
 
-        queue = self.current_queue
-
         self.current_turn += 1
 
-        if self.current_turn > len(queue):
+        if self.current_turn > len(self.current_queue):
             self.current_turn = 1
             self.queue_loop += 1
 
@@ -166,10 +159,91 @@ class TableTop(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @queue.command(name="reset", aliases=("r", "rs", "rst"))
+    @queue.command(name="previous", aliases=("pr", "prvs"))
+    async def queue_previous(self, ctx: Context):
+        """
+        Transfers the right to move to the previous character.
+        """
+        if len(self.current_queue) == 0:
+            return
+
+        if self.queue_loop < 2 and self.current_turn < 2:
+            ctx.send("I'm sorry, I can't take a step back now. NOW.")
+            return
+
+        self.current_turn -= 1
+
+        if self.current_turn < 1:
+            self.current_turn = len(self.current_queue)
+            self.queue_loop -= 1
+
+        embed = self.wrapped_queue()
+
+        await ctx.send(embed=embed)
+
+    @queue.command(name="reset", aliases=("rs", "rst"))
     async def queue_reset(self, ctx: Context):
-        """Resets current queue. DANGEROUS!"""
+        """
+        Resets current queue. DANGEROUS!
+        """
         self.reset_current_queue()
+        await ctx.send("Queue reseted!")
+
+    @queue.command(name="remove", aliases=("rm", "rmv"))
+    async def queue_remove(self, ctx: Context, *characters: str):
+        """
+        Removes Character from queue.
+
+        You can input names or postions
+        """
+        if len(self.current_queue) == 0:
+            return
+
+        if len(characters) == 0:
+            return
+
+        index = 0
+        for character in characters:
+            if character.isdigit():
+                try:
+                    del self.current_queue[int(character) - 1 - index]
+                    index += 1
+                    continue
+                except IndexError:
+                    await ctx.send(f"Can't find character on {character} position.")
+                    return
+
+            if isinstance(character, str):
+                try:
+                    self.current_queue.remove(character)
+                    continue
+                except ValueError:
+                    await ctx.send("Can't find this character.")
+                    return
+
+        if self.current_turn > len(self.current_queue):
+            self.current_turn = 1
+            self.queue_loop += 1
+
+        embed = self.wrapped_queue()
+
+        await ctx.send("Queue updated!", embed=embed)
+
+    @queue.command(name="swap", aliases=("sw", "swp"))
+    async def queue_swap(self, ctx: Context, pos_a: int, pos_b: int):
+        """
+        Swaps characters positions.
+        """
+        if len(self.current_queue) < 2:
+            return
+
+        buffer = self.current_queue[pos_a - 1]
+        self.current_queue[pos_a - 1] = self.current_queue[pos_b - 1]
+        self.current_queue[pos_b - 1] = buffer
+
+        embed = self.wrapped_queue()
+
+        await ctx.send("Queue updated!", embed=embed)
 
 
 def setup(bot: IncarnBot):
