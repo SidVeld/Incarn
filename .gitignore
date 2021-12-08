@@ -148,3 +148,7 @@ log.*
 
 # Custom user configuration
 config.yml
+
+# Game Resources
+
+incarn/resources/games/tabletop/queue

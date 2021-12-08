@@ -1,0 +1,59 @@
+fire:
+  name: Fire
+  desc: This character is on fire! Soon it will be possible to call him a "medium-rare" character.
+  emoji: ":fire:"
+
+cold:
+  name: Frozen
+  desc: This character is frozen! Don't let him turn into an icicle!
+  emoji: ":snowflake:"
+
+death:
+  name: Death
+  desc: This character died... Will there be snacks at the wake?
+  emoji: ":skull:"
+
+stun:
+  name: Stun
+  desc: This character is stunned! I don't think he's capable of doing anything right now.
+  emoji: ":sparkles:"
+
+bleed:
+  name: Bleed
+  desc: This character is bleeding! And quickly! Give him bandages or something that will stop the blood!
+  emoji: ":drop_of_blood:"
+
+luck:
+  name: Luck
+  desc: What luck! This character must participate in the lottery or make a critical attack!
+  emoji: ":four_leaf_clover:"
+
+wet:
+  name: Wet
+  desc: Whatever that means, the character is wet right now.
+  emoji: ":droplet:"
+
+ally:
+  name: Ally
+  desc: This character is either the protagonist of the party, or a friend.
+  emoji: ":small_blue_diamond:"
+
+enemy:
+  name: Enemy
+  desc: This character is likely to get hit on the head right now. Or someone else...
+  emoji: ":small_orange_diamond:"
+
+rage:
+  name: Rage
+  desc: This character is furious! There's going to be a massacre!
+  emoji: ":heart_on_fire:"
+
+disease:
+  name: Diesease
+  desc: This character is not at ease. Just look at his face!
+  emoji: ":microbe:"
+
+shock:
+  name: Shock
+  desc: The character received a strong electric shock. From now on, you can hate Zeus.
+  emoji: ":zap:"
