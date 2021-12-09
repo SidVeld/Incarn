@@ -159,7 +159,7 @@ class DiscoElysium(commands.Cog):
         except KeyError:
             embed.set_author(name="Skill not found.")
             embed.description = "I can't find that skill. Try again."
-            embed.color = Colours.red
+            embed.color = Colours.soft_red
             await ctx.send(embed=embed, delete_after=5)
             return
 
