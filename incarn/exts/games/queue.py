@@ -148,7 +148,7 @@ class Queue(commands.Cog):
 
         The queue is made up of sequentially entered character names.
         """
-        if characters.count() == 0:
+        if len(characters) == 0:
             return
 
         queue = {}
