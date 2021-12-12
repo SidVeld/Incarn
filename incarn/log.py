@@ -57,6 +57,7 @@ def setup_logger() -> None:
     get_logger("chardet").setLevel(logging.WARNING)
     get_logger("async_rediscache").setLevel(logging.WARNING)
     get_logger("git").setLevel(logging.WARNING)
+    get_logger("gtts").setLevel(logging.WARNING)
 
     # Set back to the default of INFO even if asyncio's debug mode is enabled.
     get_logger("asyncio").setLevel(logging.INFO)

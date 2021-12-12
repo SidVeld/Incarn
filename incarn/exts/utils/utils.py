@@ -83,8 +83,11 @@ class Utils(Cog):
     async def zen(self, ctx: Context, *, search_value: Union[int, str, None] = None) -> None:
         """
         Show the Zen of Python.
+
         Without any arguments, the full Zen will be produced.
+
         If an integer is provided, the line with that index will be produced.
+
         If a string is provided, the line which matches best will be produced.
         """
         embed = Embed(
@@ -153,6 +156,7 @@ class Utils(Cog):
     async def vote(self, ctx: Context, title: clean_content(fix_channel_mentions=True), *options: str) -> None:
         """
         Build a quick voting poll with matching reactions with the provided options.
+
         A maximum of 20 options can be provided, as Discord supports a max of 20
         reactions on a single message.
         """
