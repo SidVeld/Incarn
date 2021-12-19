@@ -269,7 +269,7 @@ class ModLog(Cog, name="ModLog"):
                 # Discord does not treat consecutive backticks ("``") as an empty inline code block, so the markdown
                 # formatting is broken when `new` and/or `old` are empty values. "None" is used for these cases so
                 # formatting is preserved.
-                changes.append(f"**{key.title()}:** `{old or 'None'}` **→** `{new or 'None'}`")
+                changes.append(f"{EMOJI_PENCIL} **{key.title()}:** `{old or 'None'}` **→** `{new or 'None'}`")
 
             done.append(key)
 
@@ -416,7 +416,7 @@ class ModLog(Cog, name="ModLog"):
         message = ""
 
         for item in sorted(changes):
-            message += f"{item}\n"
+            message += f"{EMOJI_PENCIL} {item}\n"
 
         message = f"{format_user(after)}\n{message}"
 
@@ -476,7 +476,7 @@ class ModLog(Cog, name="ModLog"):
             "Guild updated",
             message,
             colour=Colours.purple,
-            thumbnail=after.icon.with_static_format("png")
+            thumbnail=after.icon_url_as(static_format="png"),
         )
 
 

@@ -162,16 +162,16 @@ class Colours(metaclass=YAMLGetter):
     section = "style"
     subsection = "colours"
 
-    blue = 0x3775a8
-    bright_green = 0x01d277
-    orange = 0xe67e22
-    pink = 0xcf84e0
-    purple = 0xb734eb
-    soft_green = 0x68c290
-    soft_orange = 0xf9cb54
-    soft_red = 0xcd6d6d
-    white = 0xfffffe
-    yellow = 0xffd241
+    blue: int
+    bright_green: int
+    orange: int
+    pink: int
+    purple: int
+    soft_green: int
+    soft_orange: int
+    soft_red: int
+    white: int
+    yellow: int
 
 
 class Emojis(metaclass=YAMLGetter):
