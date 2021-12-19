@@ -20,6 +20,8 @@ CHANNEL_CHANGES_UNSUPPORTED = ("permissions",)
 CHANNEL_CHANGES_SUPPRESSED = ("_overwrites", "position")
 ROLE_CHANGES_UNSUPPORTED = ("colour", "permissions")
 
+EMOJI_PENCIL = ":pencil:"
+
 
 class ModLog(Cog, name="ModLog"):
 
@@ -277,7 +279,7 @@ class ModLog(Cog, name="ModLog"):
         message = ""
 
         for item in sorted(changes):
-            message += f"=> {item}\n"
+            message += f"{EMOJI_PENCIL} {item}\n"
 
         if after.category:
             message = f"**{after.category}/#{after.name} (`{after.id}`)**\n{message}"
@@ -287,7 +289,7 @@ class ModLog(Cog, name="ModLog"):
         await self.send_log_message(
             title="Channel updated",
             text=message,
-            colour=constants.Colours.purple
+            colour=Colours.purple
         )
 
     @Cog.listener()
@@ -414,7 +416,7 @@ class ModLog(Cog, name="ModLog"):
         message = ""
 
         for item in sorted(changes):
-            message += f"-> {item}\n"
+            message += f"{item}\n"
 
         message = f"{format_user(after)}\n{message}"
 
@@ -466,7 +468,7 @@ class ModLog(Cog, name="ModLog"):
         message = ""
 
         for item in sorted(changes):
-            message += f"[ ! ] {item}\n"
+            message += f"{EMOJI_PENCIL} {item}\n"
 
         message = f"**{after.name}** (`{after.id}`)\n{message}"
 
