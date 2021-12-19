@@ -1,6 +1,7 @@
+import aiohttp
+import arrow
 import asyncio
 import socket
-import aiohttp
 from contextlib import suppress
 from typing import Dict, Optional
 
@@ -30,6 +31,8 @@ class IncarnBot(commands.Bot):
 
         self._connector = None
         self._resolver = None
+
+        self._start_time = None
 
     @classmethod
     def create_bot(cls) -> "IncarnBot":
@@ -159,3 +162,11 @@ class IncarnBot(commands.Bot):
 
         for alias in getattr(command, "root_aliases", ()):
             self.all_commands.pop(alias, None)
+
+    @property
+    def start_time(self) -> arrow.Arrow:
+        """Get bot's start time."""
+        return self._start_time
+
+    async def on_ready(self):
+        self._start_time = arrow.utcnow()

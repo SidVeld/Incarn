@@ -1,3 +1,4 @@
+import arrow
 import psutil
 import os
 import platform
@@ -26,16 +27,26 @@ class Dev(Cog):
 
     @commands.command(name="revision")
     async def revision(self, ctx: Context):
+        """Sends technical information about the bot."""
+        embed = discord.Embed()
+
+        embed.set_author(name="Revision", icon_url=self.bot.user.avatar_url)
+
+        embed.add_field(name="Date", value=arrow.utcnow().format("DD-MM-YYYY"))
+
+        embed.add_field(name="Py-cord version", value=discord.__version__)
+
+        embed.add_field(name="Python version", value=platform.python_version())
 
         ram_usage = self.process.memory_full_info().rss / 1024**2
+        embed.add_field(name="RAM usage", value=f"{ram_usage:.2f} MB")
 
-        embed = discord.Embed()
-        embed.set_author(name="Revision", icon_url=self.bot.user.avatar_url)
-        embed.add_field(name="Py-cord", value=discord.__version__)
-        embed.add_field(name="Python", value=platform.python_version())
-        embed.add_field(name="RAM", value=f"{ram_usage:.2f} MB")
+        embed.add_field(name="Last lauch", value=self.bot.start_time.humanize())
+
         embed.add_field(name="Branch", value=Repo("./").active_branch.name)
+
         embed.add_field(name="Last commit", value=Repo("./").active_branch.commit, inline=False)
+
         await ctx.send(embed=embed)
 
     async def cog_check(self, ctx: Context) -> bool:
