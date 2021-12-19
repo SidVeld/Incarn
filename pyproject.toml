@@ -19,6 +19,7 @@ deepdiff = "~5.6.0"
 gTTS = "~2.2.3"
 psutil = "~5.8.0"
 rapidfuzz = "~1.8.2"
+zalgo-text = "~0.6"
 
 [tool.poetry.dev-dependencies]
 flake8 = "~4.0.1"

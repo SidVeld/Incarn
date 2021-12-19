@@ -419,10 +419,18 @@ python-versions = ">=3.6"
 idna = ">=2.0"
 multidict = ">=4.0"
 
+[[package]]
+name = "zalgo-text"
+version = "0.6"
+description = "̖̘A ̩̼͜͡ś̛̺̦̃m̡̥̫a̛̳̹l̵̷͐ͪl ̶̫l̞̆̇i͈̫br̮̗͘a͇͗̌r̝ͨ͜͜y ̼̃ͅṯ̴̯́͒ͩo ̷̘ćͫr͕̎͆é͋a̛̳͈͗͜tͫͮe ̵̳͗̍͡z̴͇̗a̮̹ͬl̛͒̐ģ̏o ́͡ͅs̜͗̂t̙̬͟͢ý̶̹l̪ȩ͍͓̄̾͠d ̵̷̠̌t̸͈̖́̎͢e̸̓̓x̮ͮt."
+category = "main"
+optional = false
+python-versions = "*"
+
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9"
-content-hash = "7901fb3bdc4bc73cd611c6b31727e3c5e8cac5803b16ec0cf7cfe7d7f5a8afe0"
+content-hash = "e56d7620755610d296375bfc21404cf7b499568dfa411e0afe51a3f74f635b5d"
 
 [metadata.files]
 aiodns = [
@@ -938,4 +946,7 @@ yarl = [
     {file = "yarl-1.7.2-cp39-cp39-win32.whl", hash = "sha256:1edc172dcca3f11b38a9d5c7505c83c1913c0addc99cd28e993efeaafdfaa18d"},
     {file = "yarl-1.7.2-cp39-cp39-win_amd64.whl", hash = "sha256:797c2c412b04403d2da075fb93c123df35239cd7b4cc4e0cd9e5839b73f52c58"},
     {file = "yarl-1.7.2.tar.gz", hash = "sha256:45399b46d60c253327a460e99856752009fcee5f5d3c80b2f7c0cae1c38d56dd"},
+]
+zalgo-text = [
+    {file = "zalgo_text-0.6.tar.gz", hash = "sha256:4917b5053a014e3251e95e2f6fd32ed29770ccc2d89921dcab147eb8fc6be224"},
 ]
