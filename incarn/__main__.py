@@ -16,5 +16,5 @@ except StartupError as e:
 
     log = get_logger("bot")
     log.fatal("", exec_info=e.exception)
-    log.fatal("message")
+    log.fatal(message)
     exit(69)
