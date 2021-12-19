@@ -1,16 +1,16 @@
-import random
-import yaml
+import cowsay
 import gtts
 import os
-import cowsay
+import random
+import yaml
 from pathlib import Path
 from zalgo_text import zalgo
 
 from discord import Embed
 from discord.ext import commands
-from discord.file import File
 from discord.ext.commands.context import Context
 from discord.ext.commands.errors import BadArgument
+from discord.file import File
 
 from incarn.bot import IncarnBot
 from incarn.pagination import LinePaginator
