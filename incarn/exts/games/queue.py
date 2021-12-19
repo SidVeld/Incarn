@@ -151,6 +151,11 @@ class Queue(commands.Cog):
         if len(characters) == 0:
             return
 
+        guild_file = Path(f"incarn/resources/games/tabletop/queue/{ctx.guild.id}.yml")
+        if guild_file.exists():
+            await ctx.send("Sorry, but you need to reset existing queue!")
+            return
+
         queue = {}
         position = 1
 
