@@ -8,7 +8,7 @@ from zalgo_text import zalgo
 
 from discord import Embed
 from discord.ext import commands
-from discord.ext.commands.context import Context
+from discord.ext.commands import Context, Cog
 from discord.ext.commands.errors import BadArgument
 from discord.file import File
 
@@ -16,7 +16,7 @@ from incarn.bot import IncarnBot
 from incarn.pagination import LinePaginator
 
 
-class Fun(commands.Cog):
+class Fun(Cog):
     """Commands for the entertainment of users."""
 
     def __init__(self, bot: IncarnBot):
