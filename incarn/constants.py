@@ -280,7 +280,7 @@ class Event(Enum):
 
 
 # Debug mode
-DEBUG_MODE: bool = _CONFIG_YAML["debug"] == "true"
+DEBUG_MODE: bool = _CONFIG_YAML["debug"]
 
 # Paths
 BOT_DIR = os.path.dirname(__file__)
