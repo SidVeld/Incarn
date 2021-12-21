@@ -5,6 +5,7 @@ from typing import Optional
 
 import discord
 from discord.ext import commands
+from discord.ext.commands import Cog, Context
 
 from incarn.bot import IncarnBot
 from incarn.utils.helpers import load_game_reource
@@ -26,19 +27,26 @@ class DH_Colours:
     dark_green = 0x27ae60
 
 
-class DarkHeresy(commands.Cog):
-    """Cog for Dark Heresy commands."""
+class DarkHeresy(Cog):
+    """
+    Commands for the board role-playing game "Dark Heresy".
+    Will you become the best acolyte in the world in the system?
+    """
 
     @commands.group(name="dark_heresy", aliases=["dh"])
-    async def dark_heresy(self, ctx: commands.Context):
+    async def dark_heresy(self, ctx: Context):
         """
-        Commands for playing "Dark Heresy".
+        Commands for the board role-playing game "Dark Heresy".
+        Will you become the best acolyte in the world in the system?
         """
         if ctx.invoked_subcommand is None:
             await ctx.send_help(str(ctx.command))
 
     @dark_heresy.command(name="book", aliases=["books"])
-    async def book_dark_heresy(self, ctx: commands.Context):
+    async def book_dark_heresy(self, ctx: Context):
+        """
+        Sends links to rulebooks known to the bot.
+        """
         embed = discord.Embed(color=DH_Colours.dark_red)
         embed.set_author(name="Books for Dark Heresy")
         books = load_game_reource("dark_heresy", "books")
@@ -57,7 +65,7 @@ class DarkHeresy(commands.Cog):
         await ctx.send(embed=embed)
 
     @dark_heresy.command(name="roll")
-    async def roll_dark_heresy(self, ctx: commands.Context, char_lvl: int, mod: Optional[int] = 0):
+    async def roll_dark_heresy(self, ctx: Context, char_lvl: int, mod: Optional[int] = 0):
         """
         Basic characteristic check for "Dark Heresy".
 
@@ -134,7 +142,7 @@ class DarkHeresy(commands.Cog):
         await ctx.send(embed=emb)
 
     @dark_heresy.command(name="phenomenon", aliases=["ph", "rph", "phenomena"])
-    async def roll_psy_phenomenon(self, ctx: commands.Context):
+    async def roll_psy_phenomenon(self, ctx: Context):
         """
         Rolls random PSY-phenomenon.
 
@@ -170,8 +178,13 @@ class DarkHeresy(commands.Cog):
         await ctx.send(embed=embed)
 
     @dark_heresy.command(name="hitlocation", aliases=("hl",))
-    async def roll_hitlocation(self, ctx: commands.Context, count: int = 1):
-        """creates embed"""
+    async def roll_hitlocation(self, ctx: Context, count: int = 1):
+        """
+        Determines which part of the body the attack will hit.
+
+        The `count` parameter can be replaced with another integer.
+        This parametr determines the number of attacks to be checked.
+        """
 
         if count <= 0:
             count = 1
