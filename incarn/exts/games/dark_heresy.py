@@ -30,14 +30,14 @@ class DH_Colours:
 class DarkHeresy(Cog):
     """
     Commands for the board role-playing game "Dark Heresy".
-    Will you become the best acolyte in the world in the system?
+    Will you become the best acolyte in the system?
     """
 
     @commands.group(name="dark_heresy", aliases=["dh"])
     async def dark_heresy(self, ctx: Context):
         """
         Commands for the board role-playing game "Dark Heresy".
-        Will you become the best acolyte in the world in the system?
+        Will you become the best acolyte in the system?
         """
         if ctx.invoked_subcommand is None:
             await ctx.send_help(str(ctx.command))
