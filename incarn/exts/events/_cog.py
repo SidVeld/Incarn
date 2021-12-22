@@ -68,35 +68,45 @@ class Events(Cog):
 
         events_path = Path("incarn/resources/events")
 
-        for file in os.listdir(events_path):
+        for path, dirs, files in os.walk(events_path):
 
-            file_path = events_path / file
+            for file in files:
 
-            if not os.path.isfile(file_path):
-                continue
+                if file.startswith("_") or file.startswith("__"):
+                    continue
 
-            event_data = yaml.load(file_path.open(encoding="utf-8"), Loader=yaml.FullLoader)
+                file_path = Path(f"{path}/{file}")
 
-            event_name: str = event_data["name"]
-            event_desc: str = event_data["desc"]
-            event_date: str = event_data["date"]
-            event_color: str = event_data["color"]
+                event_data = yaml.load(file_path.open(encoding="utf-8"), Loader=yaml.FullLoader)
 
-            if not event_date == today_str:
-                continue
-            else:
-                log.debug(f"Founded event {event_name} in {file}")
+                event_date: str = event_data["date"]
+                event_date_splitted = event_date.split("-")
+                day_month = f"{event_date_splitted[0]}-{event_date_splitted[1]}"
+                year = None
 
-            event_date = event_date.split("-")
-            event_date[1] = num_to_month[event_date[1]]
-            event_date = " ".join(event_date)
+                if len(event_date_splitted) == 3:
+                    year = int(event_date_splitted[2])
 
-            embed = Embed()
-            embed.title = event_name
-            embed.description = event_desc
-            embed.set_footer(text=event_date)
-            embed.color = event_color
+                if day_month != today_str:
+                    continue
 
-            channel: TextChannel = self.bot.get_channel(Channels.announcements)
+                embed = Embed()
 
-            await channel.send(embed=embed)
+                if path.endswith("birthdays"):
+                    embed.title = f":birthday: Today is the birthday of: {event_data['name']}!"
+                    embed.color = 0xec586d
+
+                    embed.add_field(name="Date of birth", value=event_date)
+
+                    if year:
+                        embed.add_field(name="Age as of today", value=int(today.format("YYYY")) - year)
+
+                else:
+                    embed.title = f":{event_data['emoji']}: {event_data['name']}"
+                    embed.color = event_data["color"]
+
+                embed.description = event_data["desc"]
+
+                channel: TextChannel = self.bot.get_channel(Channels.announcements)
+
+                await channel.send(embed=embed)

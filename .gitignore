@@ -150,5 +150,7 @@ log.*
 config.yml
 
 # Game Resources
-
 incarn/resources/games/tabletop/queue
+
+# Birthdays
+incarn/resources/events/birthdays
