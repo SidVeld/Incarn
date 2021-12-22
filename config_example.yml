@@ -41,7 +41,7 @@ guild:
   channels:
 
     # Public announcement and news channels
-    announcement:                   111111111111111111
+    announcements:                   111111111111111111
 
     # Stuff
     admins:         &ADMINS         111111111111111111

@@ -10,7 +10,10 @@ from discord.ext.commands import Cog
 
 from incarn.bot import IncarnBot
 from incarn.constants import Channels
+from incarn.log import get_logger
 from incarn.utils import scheduling
+
+log = get_logger(__name__)
 
 num_to_month = {
     "01": "January",
@@ -29,6 +32,10 @@ num_to_month = {
 
 
 class Events(Cog):
+    """
+    This module allows the bot to track holidays known to it
+    and remind everyone about them on the server.
+    """
 
     def __init__(self, bot: IncarnBot) -> None:
         self.bot = bot
@@ -52,8 +59,12 @@ class Events(Cog):
     @tasks.loop(hours=24)
     async def fetch_holidays(self):
 
+        log.debug("Fetching days.")
+
         today = arrow.now()
         today_str = today.format("DD-MM")
+
+        log.debug(f"Getted today string: {today_str}")
 
         events_path = Path("incarn/resources/events")
 
@@ -73,6 +84,8 @@ class Events(Cog):
 
             if not event_date == today_str:
                 continue
+            else:
+                log.debug(f"Founded event {event_name} in {file}")
 
             event_date = event_date.split("-")
             event_date[1] = num_to_month[event_date[1]]
