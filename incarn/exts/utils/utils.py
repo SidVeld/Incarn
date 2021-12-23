@@ -1,4 +1,5 @@
 import difflib
+import random
 import re
 import unicodedata
 from typing import Tuple, Union
@@ -173,6 +174,18 @@ class Utils(Cog):
         message = await ctx.send(embed=embed)
         for reaction in options:
             await message.add_reaction(reaction)
+
+    @command(name="pick", aliases=("random", "chose"))
+    async def pick(self, ctx: Context, *, values: str) -> None:
+        """Selects a random item from a comma-separated list."""
+        await ctx.send(random.choice(values.split(",")))
+
+    @command(name="sort")
+    async def sort(self, ctx: Context, *, items: str) -> None:
+        """Sorts the comma-separated text elements in ascending order."""
+        items = items.split(",")
+        items_sorted = ", ".join(sorted(items))
+        await ctx.send(items_sorted)
 
 
 def setup(bot: IncarnBot) -> None:
