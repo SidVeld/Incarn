@@ -31,7 +31,7 @@ class DiscoElysium(commands.Cog):
         Don't forget to turn on PROTORAVE !!!
         """
         if ctx.invoked_subcommand is None:
-            await ctx.send_help(str(ctx.command))
+            await ctx.send_help(ctx.command)
 
     @disco_elysium.command(name="roll")
     async def roll_disco(self, ctx: commands.Context, skill_level: int, difficult: int, mod: int = 0):

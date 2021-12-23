@@ -40,7 +40,7 @@ class DarkHeresy(Cog):
         Will you become the best acolyte in the system?
         """
         if ctx.invoked_subcommand is None:
-            await ctx.send_help(str(ctx.command))
+            await ctx.send_help(ctx.command)
 
     @dark_heresy.command(name="book", aliases=["books"])
     async def book_dark_heresy(self, ctx: Context):

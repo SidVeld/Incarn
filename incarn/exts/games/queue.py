@@ -139,7 +139,7 @@ class Queue(commands.Cog):
         Commands for creating queue with characters. Good for battles.
         """
         if ctx.invoked_subcommand is None:
-            await ctx.send_help(str(ctx.command))
+            await ctx.send_help(ctx.command)
 
     @queue.command(name="create", aliases=("cr", "crt"))
     async def queue_create(self, ctx: Context, *characters: str):

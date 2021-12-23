@@ -23,7 +23,7 @@ class WorldOfDarkness(commands.Cog):
         Commands for playing "World of Darkness".
         """
         if ctx.invoked_subcommand is None:
-            await ctx.send_help(str(ctx.command))
+            await ctx.send_help(ctx.command)
 
     @world_of_darkness.command(name="roll")
     async def roll_wod(self, ctx: commands.Context, dices: int, difficult: int = 6, mod: int = 0):

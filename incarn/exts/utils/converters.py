@@ -13,7 +13,7 @@ class Converters(Cog):
     async def convert_command(self, ctx: Context):
         """Simple converters that converts something to something."""
         if ctx.invoked_subcommand is None:
-            await ctx.send_help(str(ctx.command))
+            await ctx.send_help(ctx.command)
 
     @convert_command.command(name="c2f")
     async def convert_c2f(self, ctx: Context, amount: float = 0):
