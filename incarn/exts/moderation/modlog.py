@@ -164,7 +164,7 @@ class ModLog(Cog, name="ModLog"):
         message = ""
 
         for item in sorted(changes):
-            message += f"[ ! ] {item}\n"
+            message += f"{EMOJI_PENCIL} {item}\n"
 
         message = f"**{after.name}** (`{after.id}`)\n{message}"
 
