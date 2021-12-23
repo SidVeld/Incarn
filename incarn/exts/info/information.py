@@ -1,14 +1,17 @@
 
 import colorsys
+import rapidfuzz
 import textwrap
 from collections import defaultdict
 from typing import DefaultDict, Optional, Union
-from discord.ext.commands.core import guild_only
 
-import rapidfuzz
+
 from discord import Colour, Embed, Guild, Message, Role
+from discord.channel import DMChannel
 from discord.ext.commands import Cog, Context, command, has_any_role
+from discord.ext.commands.core import guild_only
 from discord.utils import escape_markdown
+
 
 from incarn import constants
 from incarn.bot import IncarnBot
@@ -16,8 +19,7 @@ from incarn.converters import MemberOrUser
 from incarn.errors import NonExistentRoleError
 from incarn.log import get_logger
 from incarn.pagination import LinePaginator
-from incarn.utils.channel import is_mod_channel, is_staff_channel
-from incarn.utils.checks import has_no_roles_check
+from incarn.utils.channel import is_staff_channel
 from incarn.utils.members import get_or_fetch_member
 from incarn.utils.time import TimestampFormats, discord_timestamp
 
@@ -67,6 +69,7 @@ class Information(Cog):
             role_stats.update(Information.join_role_stats([role_id], guild))
         return role_stats
 
+    @guild_only()
     @has_any_role(*constants.MODERATION_ROLES)
     @command(name="roles")
     async def roles_info(self, ctx: Context) -> None:
@@ -86,6 +89,7 @@ class Information(Cog):
 
         await LinePaginator.paginate(role_list, ctx, embed, empty=False)
 
+    @guild_only()
     @has_any_role(*constants.MODERATION_ROLES)
     @command(name="role")
     async def role_info(self, ctx: Context, *roles: Union[Role, str]) -> None:
@@ -143,7 +147,6 @@ class Information(Cog):
         embed = Embed(title="Server Information")
 
         created = discord_timestamp(ctx.guild.created_at, TimestampFormats.RELATIVE)
-        region = ctx.guild.region
         num_roles = len(ctx.guild.roles) - 1  # Exclude @everyone
 
         # Server Features are only useful in certain channels
@@ -154,90 +157,45 @@ class Information(Cog):
         else:
             features = ""
 
-        # Member status
-        py_invite = await self.bot.fetch_invite(constants.Guild.invite)
-        online_presences = py_invite.approximate_presence_count
-        offline_presences = py_invite.approximate_member_count - online_presences
-        member_status = (
-            f":green_circle: {online_presences:,} "
-            f":white_circle: {offline_presences:,}"
-        )
+        total_members = f"{ctx.guild.member_count:,}"
+        total_channels = len(ctx.guild.channels)
 
         embed.description = (
             f"Created: {created}"
-            f"\nVoice region: {region}"
             f"{features}"
             f"\nRoles: {num_roles}"
-            f"\nMember status: {member_status}"
         )
         embed.set_thumbnail(url=ctx.guild.icon_url)
 
-        # Members
         if ctx.guild.id == constants.Guild.id:
-            total_members = f"{ctx.guild.member_count:,}"
+
+            # Members
             member_counts = self.get_member_counts(ctx.guild)
             member_info = "\n".join(f"{role}: {count}" for role, count in member_counts.items())
             embed.add_field(name=f"Members: {total_members}", value=member_info)
 
-        # Channels
-        total_channels = len(ctx.guild.channels)
-        channel_counts = self.get_channel_type_counts(ctx.guild)
-        channel_info = "\n".join(
-            f"{channel.title()}: {count}" for channel, count in sorted(channel_counts.items())
-        )
-        embed.add_field(name=f"Channels: {total_channels}", value=channel_info)
+            # Channels
+            channel_counts = self.get_channel_type_counts(ctx.guild)
+            channel_info = "\n".join(
+                f"{channel.title()}: {count}" for channel, count in sorted(channel_counts.items())
+            )
+            embed.add_field(name=f"Channels: {total_channels}", value=channel_info)
 
-        await ctx.send(embed=embed)
-
-    @command(name="user", aliases=["user_info", "member", "member_info", "u"])
-    async def user_info(self, ctx: Context, user_or_message: Union[MemberOrUser, Message] = None) -> None:
-        """Returns info about a user."""
-        if isinstance(user_or_message, Message):
-            user = user_or_message.author
         else:
-            user = user_or_message
+            embed.description += (
+                f"\nMembers: {total_members}"
+                f"\nChannels: {total_channels}"
+            )
 
-        if user is None:
-            user = ctx.author
-
-        # Do a role check if this is being executed on someone other than the caller
-        elif user != ctx.author and await has_no_roles_check(ctx, *constants.MODERATION_ROLES):
-            await ctx.send("You may not use this command on users other than yourself.")
-            return
-
-        # Will redirect to #bot-commands if it fails.
-        # if in_whitelist_check(ctx, roles=constants.STAFF_PARTNERS_COMMUNITY_ROLES):
-        embed = await self.create_user_embed(ctx, user)
         await ctx.send(embed=embed)
 
     async def create_user_embed(self, ctx: Context, user: MemberOrUser) -> Embed:
         """Creates an embed containing information on the `user`."""
-        on_server = bool(await get_or_fetch_member(ctx.guild, user.id))
 
-        created = discord_timestamp(user.created_at, TimestampFormats.RELATIVE)
+        invoked_in_dm = isinstance(ctx.channel, DMChannel)
 
         name = str(user)
-        if on_server and user.nick:
-            name = f"{user.nick} ({name})"
-        name = escape_markdown(name)
-
-        if on_server:
-            if user.joined_at:
-                joined = discord_timestamp(user.joined_at, TimestampFormats.RELATIVE)
-            else:
-                joined = "Unable to get join date"
-
-            # The 0 is for excluding the default @everyone role,
-            # and the -1 is for reversing the order of the roles to highest to lowest in hierarchy.
-            roles = ", ".join(role.mention for role in user.roles[:0:-1])
-            membership = {"Joined": joined, "Verified": not user.pending, "Roles": roles or None}
-            if not is_mod_channel(ctx.channel):
-                membership.pop("Verified")
-
-            membership = textwrap.dedent("\n".join([f"{key}: {value}" for key, value in membership.items()]))
-        else:
-            roles = None
-            membership = "The user is not a member of the server"
+        created = discord_timestamp(user.created_at, TimestampFormats.RELATIVE)
 
         fields = [
             (
@@ -247,12 +205,34 @@ class Information(Cog):
                     Profile: {user.mention}
                     ID: {user.id}
                 """).strip()
-            ),
-            (
-                "Member information",
-                membership
-            ),
+            )
         ]
+
+        if invoked_in_dm is False:
+            on_server = bool(await get_or_fetch_member(ctx.guild, user.id))
+
+            if on_server and user.nick:
+                name = f"{user.nick} ({name})"
+
+            if on_server:
+                if user.joined_at:
+                    joined = discord_timestamp(user.joined_at, TimestampFormats.RELATIVE)
+                else:
+                    joined = "Unable to get join date"
+
+                # The 0 is for excluding the default @everyone role,
+                # and the -1 is for reversing the order of the roles to highest to lowest in hierarchy.
+                roles = ", ".join(role.mention for role in user.roles[:0:-1])
+                membership = {"Joined": joined, "Roles": roles or None}
+
+                membership = textwrap.dedent("\n".join([f"{key}: {value}" for key, value in membership.items()]))
+            else:
+                roles = None
+                membership = "The user is not a member of the server"
+
+            fields.append(("Member information", membership))
+
+        name = escape_markdown(name)
 
         embed = Embed(title=name)
 
@@ -260,9 +240,30 @@ class Information(Cog):
             embed.add_field(name=field_name, value=field_content, inline=False)
 
         embed.set_thumbnail(url=user.avatar_url)
-        embed.colour = user.colour if user.colour != Colour.default() else Colour.purple()
+
+        if user.colour != Colour.default():
+            embed.colour = user.colour
 
         return embed
+
+    @command(name="whoami", aliases=("me", "aboutme"))
+    async def whoami(self, ctx: Context):
+        embed = await self.create_user_embed(ctx, ctx.author)
+        await ctx.send(embed=embed)
+
+    @command(name="whois", aliases=("user", "user_info", "member", "member_info", "u"))
+    async def whois(self, ctx: Context, user_or_message: Union[MemberOrUser, Message] = None) -> None:
+        """Returns info about a user."""
+        if isinstance(user_or_message, Message):
+            user = user_or_message.author
+        else:
+            user = user_or_message
+
+        if user is None:
+            user = ctx.author
+
+        embed = await self.create_user_embed(ctx, user)
+        await ctx.send(embed=embed)
 
 
 def setup(bot: IncarnBot):
