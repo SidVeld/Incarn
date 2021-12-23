@@ -10,9 +10,6 @@ from rapidfuzz import fuzz, process
 from rapidfuzz.utils import default_process
 
 from incarn import constants
-# from incarn.constants import Channels, STAFF_PARTNERS_COMMUNITY_ROLES
-# from incarn.constants import Channels
-# from incarn.decorators import redirect_output
 from incarn.log import get_logger
 from incarn.pagination import LinePaginator
 from incarn.utils.messages import wait_for_deletion
@@ -43,6 +40,7 @@ class HelpQueryNotFound(ValueError):
 class CustomHelpCommand(HelpCommand):
     """
     An interactive instance for the bot help command.
+
     Cogs can be grouped into custom categories. All cogs with the same category will be displayed
     under a single category name in the help output. Custom categories are defined inside the cogs
     as a class attribute named `category`. A description can also be specified with the attribute
@@ -52,7 +50,6 @@ class CustomHelpCommand(HelpCommand):
     def __init__(self):
         super().__init__(command_attrs={"help": "Shows help for bot commands"})
 
-    # @redirect_output(destination_channel=Channels.bot_commands, bypass_roles=STAFF_PARTNERS_COMMUNITY_ROLES)
     async def command_callback(self, ctx: Context, *, command: str = None) -> None:
         """Attempts to match the provided query with a valid command or cog."""
         # the only reason we need to tamper with this is because d.py does not support "categories",
@@ -87,11 +84,13 @@ class CustomHelpCommand(HelpCommand):
         Get all the possible options for getting help in the bot.
         This will only display commands the author has permission to run.
         These include:
+
         - Category names
         - Cog names
         - Group command names (and aliases)
         - Command names (and aliases)
         - Subcommand names (with parent group and aliases for subcommand, but not including aliases for group)
+
         Options and choices are case sensitive.
         """
         # first get all commands including subcommands and full command name aliases
@@ -117,6 +116,7 @@ class CustomHelpCommand(HelpCommand):
     async def command_not_found(self, string: str) -> "HelpQueryNotFound":
         """
         Handles when a query does not match a valid command, group, cog or category.
+
         Will return an instance of the `HelpQueryNotFound` exception with the error message and possible matches.
         """
         choices = list(await self.get_all_help_choices())
@@ -126,6 +126,7 @@ class CustomHelpCommand(HelpCommand):
     async def subcommand_not_found(self, command: Command, string: str) -> "HelpQueryNotFound":
         """
         Redirects the error to `command_not_found`.
+
         `command_not_found` deals with searching and getting best choices for both commands and subcommands.
         """
         return await self.command_not_found(f"{command.qualified_name} {string}")
@@ -143,6 +144,7 @@ class CustomHelpCommand(HelpCommand):
     async def command_formatting(self, command: Command) -> Embed:
         """
         Takes a command and turns it into an embed.
+
         It will add an author, command signature + help, aliases and a note if the user can't run the command.
         """
         embed = Embed()
