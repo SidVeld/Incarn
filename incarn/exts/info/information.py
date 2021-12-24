@@ -222,7 +222,13 @@ class Information(Cog):
 
                 # The 0 is for excluding the default @everyone role,
                 # and the -1 is for reversing the order of the roles to highest to lowest in hierarchy.
-                roles = ", ".join(role.mention for role in user.roles[:0:-1])
+                roles_list = user.roles[:0:-1]
+
+                roles = ", ".join(role.mention for role in roles_list[:10])
+
+                if len(roles_list) - 10 > 0:
+                    roles += " and more."
+
                 membership = {"Joined": joined, "Roles": roles or None}
 
                 membership = textwrap.dedent("\n".join([f"{key}: {value}" for key, value in membership.items()]))
