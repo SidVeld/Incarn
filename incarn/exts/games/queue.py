@@ -18,16 +18,16 @@ class Queue(commands.Cog):
         self.bot = bot
         self.effects_dict = load_game_reource("tabletop", "effects")
 
-        if not Path("incarn/resources/games/tabletop/queue/").exists():
-            os.makedirs("incarn/resources/games/tabletop/queue/")
+        if not Path("incarn/resources/guilds/").exists():
+            os.makedirs("incarn/resources/guilds/")
 
     @staticmethod
-    def get_queue_path(guild: Guild) -> Path:
-        return Path(f"incarn/resources/games/tabletop/queue/{guild.id}.yml")
+    def get_queue_file(guild: Guild) -> Path:
+        return Path(f"incarn/resources/guilds/{guild.id}/queue.yml")
 
     @staticmethod
     def get_queue_data(guild: Guild):
-        guild_file = Queue.get_queue_path(guild)
+        guild_file = Queue.get_queue_file(guild)
         if not guild_file.exists():
             return FileNotFoundError
         queue_data = yaml.load(guild_file.open(encoding="utf-8"), Loader=yaml.FullLoader)
@@ -46,7 +46,7 @@ class Queue(commands.Cog):
 
     @staticmethod
     def set_queue_data(guild: Guild, data) -> None:
-        guild_file = Path(f"incarn/resources/games/tabletop/queue/{guild.id}.yml").open(mode="w", encoding="utf-8")
+        guild_file = Queue.get_queue_file(guild).open(mode="w", encoding="utf-8")
         yaml.dump(data, guild_file)
 
     @staticmethod
@@ -54,7 +54,7 @@ class Queue(commands.Cog):
         """
         Resets queue.
         """
-        guild_file = Path(f"incarn/resources/games/tabletop/queue/{guild.id}.yml")
+        guild_file = Queue.get_queue_file(guild)
         if guild_file.exists():
             os.remove(guild_file)
 
@@ -151,7 +151,7 @@ class Queue(commands.Cog):
         if len(characters) == 0:
             return
 
-        guild_file = Path(f"incarn/resources/games/tabletop/queue/{ctx.guild.id}.yml")
+        guild_file = self.get_queue_file(ctx.guild)
         if guild_file.exists():
             await ctx.send("Sorry, but you need to reset existing queue!")
             return

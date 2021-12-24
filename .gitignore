@@ -149,8 +149,8 @@ log.*
 # Custom user configuration
 config.yml
 
-# Game Resources
-incarn/resources/games/tabletop/queue
+# Guild resources
+incarn/resources/guilds
 
 # Birthdays
 incarn/resources/events/birthdays
