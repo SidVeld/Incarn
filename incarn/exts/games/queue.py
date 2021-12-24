@@ -47,7 +47,7 @@ class Queue(commands.Cog):
     @staticmethod
     def set_queue_data(guild: Guild, data) -> None:
         guild_file = Queue.get_queue_file(guild).open(mode="w", encoding="utf-8")
-        yaml.dump(data, guild_file)
+        yaml.dump(data, guild_file, allow_unicode=True)
 
     @staticmethod
     def reset_queue_data(guild: Guild) -> None:
