@@ -224,9 +224,9 @@ class Information(Cog):
                 # and the -1 is for reversing the order of the roles to highest to lowest in hierarchy.
                 roles_list = user.roles[:0:-1]
 
-                roles = ", ".join(role.mention for role in roles_list[:10])
+                roles = ", ".join(role.mention for role in roles_list[:20])
 
-                if len(roles_list) - 10 > 0:
+                if len(roles_list) - 20 > 0:
                     roles += " and more."
 
                 membership = {"Joined": joined, "Roles": roles or None}
