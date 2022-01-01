@@ -159,6 +159,7 @@ class Colour(Cog):
     async def colour(self, ctx: Context, *, colour_input: Optional[str] = None) -> None:
         """
         Create an embed that displays colour information.
+
         If no subcommand is called, a randomly selected colour will be shown.
         """
         if colour_input is None:
