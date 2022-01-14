@@ -379,6 +379,20 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "riotwatcher"
+version = "3.2.0"
+description = "RiotWatcher is a thin wrapper on top of the Riot Games API for League of Legends."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+requests = "*"
+
+[package.extras]
+dev = ["coverage", "pre-commit", "pytest", "pytest-cov", "tox"]
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -438,7 +452,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9"
-content-hash = "2111a57cc43822609abb60afcac7158043516dc0e2094485fafe8095fe3cb4c3"
+content-hash = "c0aa6e5b1abfcafe8c544bc583a790bc7fcc7e6c94c8e8cf87ca2d0f1a58bdb0"
 
 [metadata.files]
 aiodns = [
@@ -906,6 +920,10 @@ rapidfuzz = [
 requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},
     {file = "requests-2.26.0.tar.gz", hash = "sha256:b8aa58f8cf793ffd8782d3d8cb19e66ef36f7aba4353eec859e74678b01b07a7"},
+]
+riotwatcher = [
+    {file = "riotwatcher-3.2.0-py3-none-any.whl", hash = "sha256:91ea0a14bd75ef9c3dffe563238510baacb9e5a9e113cd0003d38099dca6a172"},
+    {file = "riotwatcher-3.2.0.tar.gz", hash = "sha256:c6f26bf582a0995723307053a2d26a7e3e0c2e8e2cee26123532aa6255f41f0d"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
