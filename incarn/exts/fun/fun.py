@@ -8,7 +8,7 @@ from zalgo_text import zalgo
 
 from discord import Embed
 from discord.ext import commands
-from discord.ext.commands import Context, Cog
+from discord.ext.commands import Context, Cog, command, cooldown
 from discord.ext.commands.errors import BadArgument
 from discord.file import File
 
@@ -22,7 +22,7 @@ class Fun(Cog):
     def __init__(self, bot: IncarnBot):
         self.bot = bot
 
-    @commands.command(name="coinflip", aliases=("flip", "coin", "cf"))
+    @command(name="coinflip", aliases=("flip", "coin", "cf"))
     async def coinflip_command(self, ctx: Context, side1: str = "heads", side2: str = "tails") -> None:
         """
         Flips a coin.
@@ -34,16 +34,16 @@ class Fun(Cog):
         message = f"{ctx.author.name} flipperd a coin and got: **{flipped_side}**"
         await ctx.reply(message, mention_author=False)
 
-    @commands.command(name="8ball")
+    @command(name="8ball")
     async def magic_ball(self, ctx: Context, *, question: str) -> None:
         """Return a Magic 8ball answer from answers list."""
         ANSWERS = yaml.load(Path("incarn/resources/fun/magic8ball.yml").read_text("utf8"), Loader=yaml.FullLoader)
         answer = random.choice(ANSWERS)
         await ctx.reply(answer, mention_author=False)
 
-    @commands.command(name="casino", aliases=("csn", "slots"))
-    @commands.cooldown(rate=1, per=3, type=commands.BucketType.user)
-    async def slots(self, ctx: Context):
+    @command(name="casino", aliases=("csn", "slots"))
+    @cooldown(rate=1, per=3, type=commands.BucketType.user)
+    async def slots(self, ctx: Context) -> None:
         """
         Slot Machine Simulator. Slot machine simulator. Can you knock out three in a row the first time?
         """
@@ -63,8 +63,8 @@ class Fun(Cog):
         else:
             await ctx.reply(f"{slotmachine} \n 1 out of 3, better luck next time!", mention_author=False)
 
-    @commands.command(name="tts")
-    async def tts_command(self, ctx: Context, lang_prefix: str, *text: str):
+    @command(name="tts")
+    async def tts_command(self, ctx: Context, lang_prefix: str, *text: str) -> None:
         """
         Sends an mp3 file with the voiced text.
         """
@@ -104,13 +104,13 @@ class Fun(Cog):
 
         os.remove(file_dir)
 
-    @commands.command(name="zalgo")
+    @command(name="zalgo")
     async def zalgo_generator(self, ctx: Context, *, text: str) -> None:
         """H̱̿͢É̛̼ Ĉ̞̌O̡͎̝M̨̆͠E̵̅͘S̀̂͟"""
         text_zalgo = zalgo.zalgo().zalgofy(text)
         await ctx.reply(text_zalgo, mention_author=False)
 
-    @commands.command()
+    @command()
     async def dadjoke(self, ctx: Context):
         """Gets a random dad joke."""
         url = "https://icanhazdadjoke.com/"
@@ -119,7 +119,7 @@ class Fun(Cog):
             result = await response.text(encoding="UTF-8")
             await ctx.reply(result, mention_author=False)
 
-    @commands.command(name="cowsay", aliases=("cws", "cowsays"))
+    @command(name="cowsay", aliases=("cws", "cowsays"))
     async def cowsay(self, ctx: Context, character: str, *, message: str) -> None:
         """
         Outputs an image of a cow (or other characters) in ASCII format with a phrase entered by the user.
@@ -138,6 +138,24 @@ class Fun(Cog):
 
         message = "```\n" + cowsay.get_output_string(character, message) + "\n```"
         await ctx.reply(message, mention_author=False)
+
+    @command(name="internetrules", aliases=("erules", "irules"))
+    async def internetrules(self, ctx: Context) -> None:
+        """Sends short version of internet rules."""
+        rules_file = Path("incarn/resources/fun/internetrules.yml")
+
+        try:
+            rules: dict = yaml.load(rules_file.open(encoding="UTF-8"), Loader=yaml.FullLoader)["short"]
+        except FileNotFoundError:
+            await ctx.send("There is no rules.")
+            return
+
+        embed = Embed(
+            title="Rules Of The Internet",
+            description="\n".join(f"**{number}**: {value}" for number, value in list(rules.items()))
+        )
+
+        await ctx.send(embed=embed)
 
 
 def setup(bot: IncarnBot) -> None:
