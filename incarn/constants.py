@@ -253,6 +253,12 @@ class URLs(metaclass=YAMLGetter):
     github_bot_repo: str
 
 
+class Keys(metaclass=YAMLGetter):
+    section = "keys"
+
+    riotgames_api_key: str
+
+
 class Event(Enum):
     """
     Event names. This does not include every event (for example, raw

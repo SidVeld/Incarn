@@ -110,3 +110,7 @@ urls:
   # GitHub
   github_bot_repo:    "https://github.com/SidVeld/Incarn"
   github_bot_origin:  "https://github.com/python-discord/bot"
+
+
+keys:
+  riotgames_api_key: null
