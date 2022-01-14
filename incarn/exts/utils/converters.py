@@ -12,9 +12,10 @@ class Converters(Cog):
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    # Temperature
+    # == Temperature ==
+    # Celsius
     @converter.group(name="celsius", aliases=["c"])
-    async def celsius(self, ctx: Context):
+    async def celsius(self, ctx: Context) -> None:
         """Convert degree Celsius to Fahrenheit or Kelvin."""
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
@@ -33,7 +34,8 @@ class Converters(Cog):
         msg = f"{temperature}° Celsius is equal to {kelvin}° Kelvin."
         await ctx.send(msg)
 
-    @converter.group(aliases=["f"])
+    # Fahrenheit
+    @converter.group(name="fahrenheit", aliases=["f"])
     async def fahrenheit(self, ctx: Context) -> None:
         """Convert Fahrenheit degree to Celsius or Kelvin."""
         if ctx.invoked_subcommand is None:
@@ -53,6 +55,7 @@ class Converters(Cog):
         msg = f"{temperature}° Fahrenheit is equal to {kelvin}° Kelvin."
         await ctx.send(msg)
 
+    # Kelvin
     @converter.group(aliases=["k"])
     async def kelvin(self, ctx: Context) -> None:
         """Convert Kelvin degree to Celsius or Fahrenheit."""
@@ -73,8 +76,9 @@ class Converters(Cog):
         msg = f"{temperature}° Kelvin is equal to {fahrenheit}° Fahrenheit."
         await ctx.send(msg)
 
-    # Weight
-    @converter.group(name="pound", alieases=["pounds", "p"])
+    # == Weight ==
+    # Pound
+    @converter.group(name="pound", aliases=["pounds", "p"])
     async def pound(self, ctx: Context) -> None:
         """Convert pounds to kilograms."""
         if ctx.invoked_subcommand is None:
@@ -86,38 +90,41 @@ class Converters(Cog):
         kg = round((mass * 0.45359237), 1)
         await ctx.send(f"{mass} lb is equal to {kg} kg.")
 
-    @converter.group()
+    # Kilogram
+    @converter.group(name="kilogram", aliases=["kilograms", "kg"])
     async def kilogram(self, ctx: Context) -> None:
         """Convert kilograms to pounds."""
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @kilogram.command(name="lb")
+    @kilogram.command(name="pound", aliases=["pounds", "p"])
     async def kilogram_to_pounds(self, ctx: Context, mass: float) -> None:
         """Convert kilograms to pounds."""
         lb = round((mass / 0.45359237), 1)
         await ctx.send(f"{mass} kg is equal to {lb} lb.")
 
-    # Distance
-    @converter.group(name="mile", aliases=["miles", "m"])
+    # == Distance ==
+    # Mile
+    @converter.group(name="mile", aliases=["miles", "mi"])
     async def mile(self, ctx: Context):
         """Convert miles to kilometers."""
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @mile.command(name="kilometer", aliases=["kilometers", "kg"])
+    @mile.command(name="kilometer", aliases=["kilometers", "km"])
     async def mile_to_kilometer(self, ctx: Context, length: float) -> None:
         """Convert miles to kilometers."""
         km = round((length * 1.609344), 1)
         await ctx.send(f"{length} mi is equal to {km} km.")
 
-    @converter.group()
+    # Kilometer
+    @converter.group(name="kilometer", aliases=["kilometers", "km"])
     async def kilometer(self, ctx: Context):
         """Convert kilometers to miles."""
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @kilometer.command(name="mile", aliases=["miles", "m"])
+    @kilometer.command(name="mile", aliases=["miles", "mi"])
     async def kilometer_to_mile(self, ctx: Context, length: float) -> None:
         """Convert kilometers to miles."""
         mi = round((length / 1.609344), 1)
