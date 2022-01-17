@@ -152,5 +152,6 @@ config.yml
 # Guild resources
 incarn/resources/guilds
 
-# Birthdays
-incarn/resources/events/birthdays
+# Events
+incarn/resources/events/*
+!incarn/resources/events/_*

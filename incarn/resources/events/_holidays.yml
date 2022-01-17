@@ -1,0 +1,7 @@
+holiday_key:
+  name: Cool name!
+  desc: >
+    Wow! This is description!
+  date: 10-05
+  color: 0xfe8a40
+  emoji: frog
