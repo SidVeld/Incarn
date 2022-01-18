@@ -17,21 +17,6 @@ from incarn.utils import scheduling
 
 log = get_logger(__name__)
 
-num_to_month = {
-    "01": "January",
-    "02": "February",
-    "03": "March",
-    "04": "April",
-    "05": "May",
-    "06": "June",
-    "07": "July",
-    "08": "August",
-    "09": "September",
-    "10": "October",
-    "11": "November",
-    "12": "December",
-}
-
 EVENTS_DIR = Path("incarn/resources/events")
 
 
@@ -50,17 +35,17 @@ class Events(Cog):
         self.scheduler.cancel_all()
         self.check_day.stop()
 
-    async def _plan_fetch(self):
+    async def _plan_fetch(self) -> None:
         today = arrow.now()
         next_day = today.shift(days=1)
         next_day_midnight = next_day.replace(hour=0, minute=1, second=0, microsecond=0)
         self.scheduler.schedule_at(next_day_midnight, 1, self._start_checking())
 
-    async def _start_checking(self):
+    async def _start_checking(self) -> None:
         self.check_day.start()
 
     @tasks.loop(hours=24)
-    async def check_day(self, ctx):
+    async def check_day(self) -> None:
         """Checks day for special events."""
         today = arrow.now()
         await self.fetch_birthdays(today)
@@ -97,8 +82,12 @@ class Events(Cog):
             if year is not None:
                 embed.add_field(name="Age as of today", value=int(today.format("YYYY")) - year)
 
+            embed.set_footer(text=today.format("DD MMMM"))
+
             channel: TextChannel = self.bot.get_channel(Channels.announcements)
             await channel.send(embed=embed)
+
+        log.debug("Finished fetching birthdays")
 
     async def fetch_holidays(self, today: Arrow) -> None:
         """Fetches holidays and sending embed if today is a special holiday."""
@@ -125,6 +114,8 @@ class Events(Cog):
                 description=desc,
                 colour=color
             )
+
+            embed.set_footer(text=today.format("DD MMMM"))
 
             channel: TextChannel = self.bot.get_channel(Channels.announcements)
 
