@@ -26,17 +26,20 @@ class DiceRoll(commands.Cog):
         `1d5-1` -> Rolls 1 dice with 5 edges. Returns a number from 1 to 5, from which 1 will be subtracted.
         """
 
+        if expression.isdigit():
+            expression = f"1d{expression}"
+
         if len(expression) < 3:
             await ctx.send("Too short!")
             return
 
         expression_split = expression.split("d")
 
-        count = int(expression_split[0])
+        count = int(float(expression_split[0]))
 
         sides_and_mod = re.split("(\+|\-|\*|//|/)", expression_split[1])  # noqa W605
 
-        sides = int(sides_and_mod[0])
+        sides = int(float(sides_and_mod[0]))
 
         mod_str = " ".join(sides_and_mod[1:])
 
