@@ -79,14 +79,12 @@ class WorldOfDarkness(Cog):
             embed.set_author(name="CRITICAL FAILURE")
             embed.color = RollColors.failure_crit
 
-        roll_list_sorted = sorted(roll_list)
-
         roll_info = f"""
         Here you can learn more about your roll.
         ────────────────────────
-        **Rolls:** `{dices} ({len(roll_list) - dices})`
-        **Regular:** `{", ".join([str(roll) for roll in roll_list])}`
-        **Sorted:** `{", ".join([str(roll) for roll in roll_list_sorted])}`
+        **Rolls:** `{dices}` `({len(roll_list) - dices})`
+        **Regular:** {" ".join([f"`{roll}`" for roll in roll_list])}
+        **Sorted:** {" ".join([f"`{roll}`" for roll in sorted(roll_list)])}
         ────────────────────────
         **Target**: `{difficult}` **Mod**: `{mod}`
         **Successes**: `{successes}` **Total**: `{total}`
@@ -117,16 +115,17 @@ class WorldOfDarkness(Cog):
         successes = 0
         roll_list = []
 
-        while dices != 0:
+        rolls = dices
+        while rolls != 0:
             dice = random.randint(1, 10)
             if dice == 10:
                 successes += 1
-                dices += 1
+                rolls += 1
             elif dice == 1:
                 successes -= 1
             elif dice >= difficult:
                 successes += 1
-            dices -= 1
+            rolls -= 1
             roll_list.append(dice)
 
         if successes >= 5:
@@ -149,8 +148,9 @@ class WorldOfDarkness(Cog):
             embed.color = RollColors.failure_crit
 
         info = f"""
-        **Rolls:** `{", ".join([str(roll) for roll in roll_list])}`
-        **Sorted:** `{", ".join([str(roll) for roll in sorted(roll_list)])}`
+        **Rolls:** `{dices}` `({len(roll_list) - dices})`
+        **Regular:** {" ".join([f"`{roll}`" for roll in roll_list])}
+        **Sorted:** {" ".join([f"`{roll}`" for roll in sorted(roll_list)])}
         **Difficult:** `{difficult}` **Successes:** `{successes}`
         """
 
