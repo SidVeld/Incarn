@@ -127,13 +127,13 @@ class DiscoElysium(commands.Cog):
         roll_info = f"""
         Here you can learn more about your roll.
 
-        **Difficult**: ({difficult})
+        **Difficult**: `{difficult}`
         VS
-        **Total (you have)**: {total}
+        **Total (you have)**: `{total}`
         ────────────────────────
-        • **Skill**: {skill_level}
-        • **Dices**: {dice_1} + {dice_2} = {dice_1 + dice_2}
-        • **Mod**: {mod}
+        • **Skill**: `{skill_level}`
+        • **Dices**: `{dice_1}` + `{dice_2}` = `{dice_1 + dice_2}`
+        • **Mod**: `{mod}`
         """
 
         emb.description = textwrap.dedent(roll_info)
