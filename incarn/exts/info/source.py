@@ -24,7 +24,7 @@ class BotSource(commands.Cog):
         if not source_item:
             embed = Embed(title="Bot's GitHub Repository")
             embed.add_field(name="Incarn's Repository", value=f"[Go to GitHub]({URLs.github_bot_repo})")
-            embed.add_field(name="Python-Discord's Bot Repository", value=f"[Go to GitHub]({URLs.github_bot_repo})")
+            embed.add_field(name="Python-Discord's Bot Repository", value=f"[Go to GitHub]({URLs.github_bot_origin})")
             embed.set_thumbnail(url="https://avatars1.githubusercontent.com/u/9919")
             await ctx.send(embed=embed)
             return
@@ -65,11 +65,11 @@ class BotSource(commands.Cog):
 
         # Handle tag file location differently than others to avoid errors in some cases
         if not first_line_no:
-            file_location = Path(filename).relative_to("/bot/")
+            file_location = Path(filename).relative_to("/incarn/")
         else:
             file_location = Path(filename).relative_to(Path.cwd()).as_posix()
 
-        url = f"{URLs.github_bot_repo}/blob/main/{file_location}{lines_extension}"
+        url = f"{URLs.github_bot_repo}/blob/master/{file_location}{lines_extension}"
 
         return url, file_location, first_line_no or None
 
