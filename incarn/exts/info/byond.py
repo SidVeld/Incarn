@@ -23,7 +23,7 @@ class Byond(Cog):
     @classmethod
     def fetch_servers(self) -> None:
         """Fetches servers dict from special file."""
-        server_file = Path("incarn/resources/info/ss13.yml")
+        server_file = Path("incarn/resources/info/_ss13.yml")
         servers: dict = yaml.load(server_file.open(encoding="utf-8"), Loader=yaml.FullLoader)
         self.servers = servers
 
