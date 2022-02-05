@@ -251,6 +251,7 @@ class URLs(metaclass=YAMLGetter):
     discord_invite_api: str
 
     github_bot_repo: str
+    github_bot_origin: str
 
 
 class Keys(metaclass=YAMLGetter):
