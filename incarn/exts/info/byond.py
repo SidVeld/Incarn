@@ -137,6 +137,7 @@ class Byond(Cog):
 
         ip, port, name, color = self.get_server_info(server_tag)
         response = self.get_from_byond(ip, port, "status")
+        decoded = self.decode(response)
 
         if response is None:
             await ctx.send("Something goes wrong. I didn't recieved data from server.")
@@ -147,7 +148,7 @@ class Byond(Cog):
         embed = Embed(title=name, colour=color)
 
         for field in fields.values():
-            embed.add_field(name=field["name"], value=field["key"], inline=field["inline"])
+            embed.add_field(name=field["name"], value=decoded[field["key"]], inline=field["inline"])
 
         await ctx.send(embed=embed)
 
