@@ -124,9 +124,9 @@ class DarkHeresy(Cog):
         roll_info = f"""
         Here you can learn more about your roll.
         ────────────────────────
-        **You**: {dice} + {mod} = {total}
-        **Target**: {char_lvl}
-        **Degrees**: {degrees}
+        **You**: `{dice}` + `{mod}` = `{total}`
+        **Target**: `{char_lvl}`
+        **Degrees**: `{degrees}`
         """
 
         a, b = divmod(total, 10)
