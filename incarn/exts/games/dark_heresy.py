@@ -9,6 +9,7 @@ from discord.ext.commands import Cog, Context
 
 from incarn.bot import IncarnBot
 from incarn.utils.helpers import load_game_reource
+from incarn.constants import Bot
 
 
 class DH_Colours:
@@ -129,17 +130,24 @@ class DarkHeresy(Cog):
         **Degrees**: `{degrees}`
         """
 
-        a, b = divmod(total, 10)
-        if a == b:
-            emb.add_field(
-                name="PSYCHIC PHENOMENA",
-                value=f"We got **{total}**! If you are psyker - use subcommand `phenomenon`!"
-            )
-            emb.color = DH_Colours.purple
-
         emb.description = textwrap.dedent(roll_info)
 
         await ctx.send(embed=emb)
+
+        a, b = divmod(total, 10)
+        if a == b:
+            roll_info = f"""
+            ***PSYCHIC PHENOMENA***
+            ────────────────────────
+            We got **{total}**!
+            If you are psyker - use subcommand:
+            `{Bot.prefix}phenomenon`
+            """
+            emb.set_author(name="Warning!")
+            emb.description = textwrap.dedent(roll_info)
+            emb.color = DH_Colours.purple
+
+            await ctx.send(embed=emb)
 
     @dark_heresy.command(name="phenomenon", aliases=["ph", "rph", "phenomena"])
     async def roll_psy_phenomenon(self, ctx: Context):
