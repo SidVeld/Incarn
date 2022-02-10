@@ -412,7 +412,15 @@ class Queue(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @queue.command(name="addeffect", aliases=("addeff", "adde"))
+    @queue.group(name="effect", aliases=("eff", "e", "effects"))
+    async def queue_effect(self, ctx: Context) -> None:
+        """
+        Commands for managing character's effects.
+        """
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(ctx.command)
+
+    @queue_effect.command(name="add")
     async def queue_add_effect(self, ctx: Context, position: int, *effects: str):
         """
         Adds effects to character on selected position.
@@ -427,7 +435,7 @@ class Queue(commands.Cog):
         queue, round, current_turn = self.parse_queue_data(queue_data)
 
         character = queue[position]
-        character["effects"] += list(effects)
+        character["effects"] += [effect.lower() for effect in effects]
 
         updated_character = {"name": character["name"], "effects": self.sort_effect_list(character["effects"])}
         queue[position] = updated_character
@@ -438,7 +446,7 @@ class Queue(commands.Cog):
 
         await self.queue_inspect(ctx, position)
 
-    @queue.command(name="removeeffect", aliases=("rmveff", "rmve"))
+    @queue_effect.command(name="remove")
     async def queue_remove_effect(self, ctx: Context, position: int, *effects: str):
         """
         Removes effects from character on selected position.
