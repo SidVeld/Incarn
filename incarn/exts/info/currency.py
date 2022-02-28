@@ -16,7 +16,6 @@ class Currency(Cog):
 
     def __init__(self, bot: IncarnBot) -> None:
         self.bot = bot
-        self.http_session = self.bot.http_session
 
     @group(name="currency", aliases=("curr", "crrncy"))
     async def currency(self, ctx: Context) -> None:
@@ -34,7 +33,7 @@ class Currency(Cog):
         """
         currency = currency.upper()
 
-        response = await self.http_session.get(f"{CURRENCY_API}{currency}")
+        response = await self.bot.http_session.get(f"{CURRENCY_API}{currency}")
 
         if response.status == 200:
             response_json = await response.json(encoding="UTF-8")
@@ -73,7 +72,7 @@ class Currency(Cog):
             await ctx.send("1 : 1")
             return
 
-        response = await self.http_session.get(f"{CURRENCY_API}{to_currency}")
+        response = await self.bot.http_session.get(f"{CURRENCY_API}{to_currency}")
 
         if response.status == 200:
             response_json = await response.json(encoding="UTF-8")
