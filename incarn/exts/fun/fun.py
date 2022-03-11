@@ -110,14 +110,14 @@ class Fun(Cog):
         text_zalgo = zalgo.zalgo().zalgofy(text)
         await ctx.reply(text_zalgo, mention_author=False)
 
-    @command()
-    async def dadjoke(self, ctx: Context):
-        """Gets a random dad joke."""
-        url = "https://icanhazdadjoke.com/"
+    # @command()
+    # async def dadjoke(self, ctx: Context):
+    #     """Gets a random dad joke."""
+    #     url = "https://icanhazdadjoke.com/"
 
-        async with self.bot.http_session.get(url, headers={"Accept": "text/plain"}) as response:
-            result = await response.text(encoding="UTF-8")
-            await ctx.reply(result, mention_author=False)
+    #     async with self.bot.http_session.get(url, headers={"Accept": "text/plain"}) as response:
+    #         result = await response.text(encoding="UTF-8")
+    #         await ctx.reply(result, mention_author=False)
 
     @command(name="cowsay", aliases=("cws", "cowsays"))
     async def cowsay(self, ctx: Context, character: str, *, message: str) -> None:
