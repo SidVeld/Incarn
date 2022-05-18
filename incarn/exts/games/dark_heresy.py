@@ -13,12 +13,12 @@ from incarn.constants import Bot
 
 
 class DH_Colours:
-    success_crit = 0x78e08f
-    success = 0xb8e994
-    failure = 0xe55039
+    success_crit = 0x72d653
+    success = 0x5d9957
+    failure = 0x8b292a
     failure_crit = 0xeb2f06
 
-    green = 0x2ecc71
+    green = 0x5fb145
     red = 0xe74c3c
     orange = 0xe67e22
     dark_orange = 0xd35400
@@ -66,7 +66,7 @@ class DarkHeresy(Cog):
         await ctx.send(embed=embed)
 
     @dark_heresy.command(name="roll")
-    async def roll_dark_heresy(self, ctx: Context, char_lvl: int, mod: Optional[int] = 0):
+    async def roll_dark_heresy(self, ctx: Context, skill: int, modifer: Optional[int] = 0):
         """
         Basic characteristic check for "Dark Heresy".
 
@@ -78,55 +78,40 @@ class DarkHeresy(Cog):
         """
         emb = discord.Embed()
 
-        dice = random.randint(1, 100)
-        total = dice + mod
+        roll = random.randint(1, 100)
+        target = skill + modifer
 
-        if total == 1:
+        if roll == 1:
             result = "CRITICAL SUCCESS"
-        elif total == 100:
+        elif roll == 100:
             result = "CRITICAL FAILURE"
-        elif total <= char_lvl:
+        elif roll <= target:
             result = "SUCCESS"
         else:
             result = "FAILURE"
 
-        # =====
-        # Disabled untill 3.10
-        # =====
-        # match result:
-        #     case "CRITICAL SUCCESS":
-        #         emb.color = DH_Colours.yellow
-
-        #     case "SUCCESS":
-        #         emb.color = DH_Colours.green
-
-        #     case "FAILURE":
-        #         emb.color = DH_Colours.orange
-
-        #     case "CRITICAL FAILURE":
-        #         emb.color = DH_Colours.red
-
-        if result == "CRITICAL SUCCESS":
-            emb.color = DH_Colours.yellow
-        elif result == "SUCCESS":
-            emb.color = DH_Colours.green
-        elif result == "FAILURE":
-            emb.color = DH_Colours.orange
-        elif result == "CRITICAL FAILURE":
-            emb.color = DH_Colours.red
+        match result:
+            case "CRITICAL SUCCESS":
+                emb.color = DH_Colours.success_crit
+            case "SUCCESS":
+                emb.color = DH_Colours.success
+            case "FAILURE":
+                emb.color = DH_Colours.failure
+            case "CRITICAL FAILURE":
+                emb.color = DH_Colours.failure_crit
 
         emb.set_author(name=result)
 
-        difference = char_lvl - total
-        if difference < 0:
-            difference *= -1
-        degrees = difference // 10
+        degrees = (target // 10) - (roll // 10)
 
         roll_info = f"""
         Here you can learn more about your roll.
+        ─ • ──────────────────────
+        **Skill**: `{skill}`
+        **Modifer**: `{modifer}`
+        **Target**: `{target}`
         ────────────────────────
-        **You**: `{dice}` + `{mod}` = `{total}`
-        **Target**: `{char_lvl}`
+        **Roll**: `{roll}`
         **Degrees**: `{degrees}`
         """
 
@@ -134,14 +119,14 @@ class DarkHeresy(Cog):
 
         await ctx.send(embed=emb)
 
-        a, b = divmod(total, 10)
-        if a == b:
+        first_number, second_number = divmod(roll, 10)
+        if first_number == second_number:
             roll_info = f"""
             ***PSYCHIC PHENOMENA***
             ────────────────────────
-            We got **{total}**!
+            We got **{roll}**!
             If you are psyker - use subcommand:
-            `{Bot.prefix}phenomenon`
+            `{Bot.prefix}dark_heresy phenomenon`
             """
             emb.set_author(name="Warning!")
             emb.description = textwrap.dedent(roll_info)
