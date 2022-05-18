@@ -75,66 +75,46 @@ class DiscoElysium(commands.Cog):
         else:
             result = "FAILURE"
 
-        if result == "CRITICAL SUCCESS":
-            emb.color = DiscoColors.disco_green
-        elif result == "SUCCESS":
-            emb.color = DiscoColors.disco_green
-        elif result == "FAILURE":
-            emb.color = DiscoColors.disco_orange
-        elif result == "CRITICAL FAILURE":
-            emb.color = DiscoColors.disco_orange
+        match result:
+            case "SUCCESS" | "CRITICAL SUCCESS":
+                emb.color = DiscoColors.disco_green
 
-        # match result:
-        #     case "CRITICAL SUCCESS":
-        #         emb.color = DiscoColors.disco_green
-        #     case "SUCCESS":
-        #         emb.color = DiscoColors.disco_green
-        #     case "FAILURE":
-        #         emb.color = DiscoColors.disco_orange
-        #     case "CRITICAL FAILURE":
-        #         emb.color = DiscoColors.disco_orange
+            case "FAILURE" | "CRITICAL FAILURE":
+                emb.color = DiscoColors.disco_orange
 
-        # match difficult:
-        #     case 20:
-        #         difficult_text = "Impossible"
-        #     case 19:
-        #         difficult_text = "Impossible"
-        #     case 18:
-        #         difficult_text = "Impossible"
-        #     case 17:
-        #         difficult_text = "Godly"
-        #     case 16:
-        #         difficult_text = "Godly"
-        #     case 15:
-        #         difficult_text = "Heroic"
-        #     case 14:
-        #         difficult_text = "Legendary"
-        #     case 13:
-        #         difficult_text = "Formidable"
-        #     case 12:
-        #         difficult_text = "Challenging"
-        #     case 11:
-        #         difficult_text = "Medium"
-        #     case 10:
-        #         difficult_text = "Medium"
-        #     case 9:
-        #         difficult_text = "Easy"
-        #     case 8:
-        #         difficult_text = "Easy"
-        #     case _:
-        #         difficult_text = "Trival"
+        match difficult:
+            case 20 | 19 | 18:
+                difficult_text = "IMPOSSIBLE"
+            case 17 | 16:
+                difficult_text = "Godly"
+            case 15:
+                difficult_text = "Heroic"
+            case 14:
+                difficult_text = "Legendary"
+            case 13:
+                difficult_text = "Formidable"
+            case 12:
+                difficult_text = "Challenging"
+            case 11 | 10:
+                difficult_text = "Medium"
+            case 9 | 8:
+                difficult_text = "Easy"
+            case _:
+                difficult_text = "Trival"
 
         roll_info = f"""
         Here you can learn more about your roll.
 
-        **Difficult**: `{difficult}`
-        VS
+        **Difficult**: ***{difficult_text}*** - `{difficult}`
+        ──── VS ────
         **Total (you have)**: `{total}`
         ────────────────────────
         • **Skill**: `{skill_level}`
         • **Dices**: `{dice_1}` + `{dice_2}` = `{dice_1 + dice_2}`
-        • **Mod**: `{mod}`
         """
+
+        if (mod != 0):
+            roll_info += f"• **Mod**: `{mod}`"
 
         emb.description = textwrap.dedent(roll_info)
 
