@@ -180,6 +180,21 @@ class Fun(Cog):
 
             await ctx.send(embed=embed)
 
+    @command(name="leetspeak", aliases=("leet", "1337"))
+    async def leetspeak(self, ctx: Context, *, text: str) -> None:
+        """Converts your message to leetspeak."""
+        text = text.lower()
+        text = text.replace("a", "4")
+        text = text.replace("e", "3")
+        text = text.replace("i", "1")
+        text = text.replace("o", "0")
+        text = text.replace("u", "(_)")
+
+        text = text.replace("и", "1")
+        text = text.replace("е", "3")
+        text = text.replace("а", "4")
+        await ctx.send(text)
+
 
 def setup(bot: IncarnBot) -> None:
     """Load the Fun cog."""
