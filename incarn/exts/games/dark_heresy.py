@@ -28,6 +28,13 @@ class DH_Colours:
     dark_green = 0x27ae60
 
 
+class Results:
+    success = "Success"
+    failure = "Failure"
+    critical_success = "Critical Success!"
+    critical_failure = "Critical Failure!"
+
+
 class DarkHeresy(Cog):
     """
     Commands for the board role-playing game "Dark Heresy".
@@ -82,22 +89,22 @@ class DarkHeresy(Cog):
         target = skill + modifer
 
         if roll == 1:
-            result = "CRITICAL SUCCESS"
+            result = Results.critical_success
         elif roll == 100:
-            result = "CRITICAL FAILURE"
+            result = Results.critical_failure
         elif roll <= target:
-            result = "SUCCESS"
+            result = Results.success
         else:
-            result = "FAILURE"
+            result = Results.failure
 
         match result:
-            case "CRITICAL SUCCESS":
+            case Results.critical_success:
                 emb.color = DH_Colours.success_crit
-            case "SUCCESS":
+            case Results.success:
                 emb.color = DH_Colours.success
-            case "FAILURE":
+            case Results.failure:
                 emb.color = DH_Colours.failure
-            case "CRITICAL FAILURE":
+            case Results.critical_failure:
                 emb.color = DH_Colours.failure_crit
 
         emb.set_author(name=result)

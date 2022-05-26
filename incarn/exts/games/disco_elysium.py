@@ -18,6 +18,13 @@ class DiscoColors:
     disco_yellow = 0xe3b834
 
 
+class Results:
+    success = "Success"
+    failure = "Failure"
+    critical_success = "Critical Success!"
+    critical_failure = "Critical Failure!"
+
+
 class DiscoElysium(commands.Cog):
     """Cog for Disco Elysium commands."""
 
@@ -67,19 +74,18 @@ class DiscoElysium(commands.Cog):
         total = skill_level + dice_summ + mod
 
         if dice_1 == dice_2 == 6:
-            result = "CRITICAL SUCCESS"
+            result = Results.critical_success
         elif dice_1 == dice_2 == 1:
-            result = "CRITICAL FAILURE"
+            result = Results.critical_failure
         elif total >= difficult:
-            result = "SUCCESS"
+            result = Results.success
         else:
-            result = "FAILURE"
+            result = Results.failure
 
         match result:
-            case "SUCCESS" | "CRITICAL SUCCESS":
+            case Results.success | Results.critical_success:
                 emb.color = DiscoColors.disco_green
-
-            case "FAILURE" | "CRITICAL FAILURE":
+            case Results.failure | Results.critical_failure:
                 emb.color = DiscoColors.disco_orange
 
         match difficult:
