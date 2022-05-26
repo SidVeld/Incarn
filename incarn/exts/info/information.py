@@ -5,13 +5,11 @@ import textwrap
 from collections import defaultdict
 from typing import DefaultDict, Optional, Union
 
-
 from discord import Colour, Embed, Guild, Message, Role
 from discord.channel import DMChannel
 from discord.ext.commands import Cog, Context, command, has_any_role
 from discord.ext.commands.core import guild_only
 from discord.utils import escape_markdown
-
 
 from incarn import constants
 from incarn.bot import IncarnBot
@@ -269,6 +267,21 @@ class Information(Cog):
             user = ctx.author
 
         embed = await self.create_user_embed(ctx, user)
+        await ctx.send(embed=embed)
+
+    @command(name="avatar")
+    async def avatar(self, ctx: Context, user_or_message: Union[MemberOrUser, Message] = None) -> None:
+        if isinstance(user_or_message, Message):
+            user = user_or_message.author
+        else:
+            user = user_or_message
+
+        if user is None:
+            user = ctx.author
+
+        embed = Embed(title=f"Avatar: {user}")
+        embed.set_image(url=user.avatar_url)
+
         await ctx.send(embed=embed)
 
 
