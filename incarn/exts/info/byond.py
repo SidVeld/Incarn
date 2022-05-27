@@ -1,10 +1,10 @@
-import yaml
-from numpy import uint16
 from pathlib import Path
-from socket import socket
-from typing import Optional
-
 from discord import Embed
+import yaml
+import socket
+import struct
+import urllib.parse
+
 from discord.ext.commands import Cog, Context, group
 
 from incarn.bot import IncarnBot
@@ -12,143 +12,119 @@ from incarn.log import get_logger
 
 log = get_logger(__name__)
 
+TOPIC_PACKET_ID = b'\x83'
+TOPIC_RESPONSE_FLOAT = b'\x2a'
+TOPIC_RESPONSE_STRING = b'\x06'
+
 
 class Byond(Cog):
     """Byond-related commands. Honk."""
 
-    def __init__(self, bot: IncarnBot) -> None:
-        self.bot = bot
-        self.fetch_servers()
+    def _get_servers(self):
+        config = Path("incarn/resources/info/ss13.yml")
+        data: dict = yaml.safe_load(config.open())
+        return data
 
-    @classmethod
-    def fetch_servers(self) -> None:
-        """Fetches servers dict from special file."""
-        server_file = Path("incarn/resources/info/_ss13.yml")
-        servers: dict = yaml.load(server_file.open(encoding="utf-8"), Loader=yaml.FullLoader)
-        self.servers = servers
-
-    @classmethod
-    def is_server_supported(self, server_tag: str, request_type: str) -> bool:
-        """Checks is server supported by bot."""
-        self.fetch_servers()
-
-        for server in self.servers.values():
-            tags: list = server["tags"]
-            requests: dict = server["fields"]
-            if server_tag.lower() in tags and request_type in list(requests.keys()):
+    def _is_server_supported(self, server_name: str):
+        servers = self._get_servers()
+        for server in servers.values():
+            if server_name.lower() in server["aliases"]:
                 return True
         return False
 
-    @classmethod
-    def get_server_info(self, server_tag: str) -> tuple[str, int, str, str]:
-        """Returns server's info: `ip`, `port`, `name` and `color`."""
-        self.fetch_servers()
-        for server in self.servers.values():
-            if server_tag.lower() in server["tags"]:
-                return server["ip"], server["port"], server["name"], server["color"]
+    def _get_server_config(self, server_name: str):
+        servers = self._get_servers()
+        for server in servers.values():
+            if server_name.lower() in server["aliases"]:
+                return server
 
-    @classmethod
-    def get_server_fields(self, server_tag: str, request_type: str):
-        """Returns server's fields for status embed."""
-        self.fetch_servers()
-        for server in self.servers.values():
-            if server_tag.lower() in server["tags"]:
-                return server["fields"][request_type]
+    def _build_embed(self, server_config: dict, data: dict, embed_type: str):
+        embed = Embed()
+        embed.title = server_config["name"]
+        embed.colour = server_config["color"]
+        fields: dict = server_config["embeds"][embed_type]
+        for field in fields.values():
+            embed.add_field(
+                name=field["name"],
+                value=" ".join(data[field["key"]]),
+                inline=field["inline"]
+            )
+        return embed
 
-    @classmethod
-    def get_from_byond(self, ip: str, port: int, message: str) -> Optional[bytes]:
-        """Gets response from `World/Topic`"""
-        client = socket()
-        try:
-            client.connect((ip, port))
-            client.send(self.build_message_bytearray(message))
-            response = client.recv(1460)
-            client.close()
-        except Exception as error:
-            log.error(f"{ip}:{port} - {error}")
-            client.close()
-            return None
-        return response
+    def _send_query(self, address: str, port: int, query: str):
 
-    @staticmethod
-    def build_message_bytearray(message: str) -> bytearray:
-        """Builds message's bytearray."""
-        length = uint16(len(message) + 6)
-        msg = bytearray()
-        msg.extend(b"\x00\x83")
-        msg.append(length >> 8)
-        msg.append((length << 8) >> 8)
-        msg.extend(b'\x00\x00\x00\x00\x00')
-        msg.extend(bytes(message, encoding="utf_8"))
-        msg.extend(b'\x00')
-        return msg
+        if len(query) == 0 or query[0] != '?':
+            queryString = '?' + query
+        else:
+            queryString = query
 
-    @staticmethod
-    def decode(data):
-        data = "".join([chr(x) for x in data[5:-1]])
-        data = data.replace("%3a", ":")
-        data = data.replace("+", " ")
-        data = data.split("&")
-        ndat = {"other": list(), "player": list()}
+        # Header:
+        # - pad byte
+        # - packetId (0x83)
+        # - big-endian uint16_t packet-size
+        # - pad byte
+        packetSize = len(queryString) + 6
+        if packetSize >= (2 ** 16 - 1):
+            raise Exception('query string too big, max packet size exceeded.')
+        packet = struct.pack('>xcH5x', TOPIC_PACKET_ID, packetSize) + bytes(queryString, encoding='utf8') + b'\x00'
 
-        for i in data:
-            j = i.split("=")
+        sock = socket.create_connection((address, port))
+        sock.settimeout(10)
+        sock.send(packet)
 
-            if(j[0][:6] == "player" and j[0][6] != "s"):
-                ndat["player"].append(j[1])
-            elif(len(j)-1):
-                ndat[j[0]] = j[1]
-            else:
-                ndat["other"].append(j[0])
+        # Response has a 5-byte header, which has a length attribute inside it to
+        # tell us how big the response actually is. (Allegedly)
 
-        return ndat
+        recv_header = sock.recv(5)
+        recvPacketId, content_len, response_type = struct.unpack('>xcHc', recv_header)
+        if recvPacketId != TOPIC_PACKET_ID:
+            # How strange. Are we perhaps talking to something that isn't a BYOND server?
+            sock.close()
+            raise Exception(f"Incorrect packet-ID received in response. Expecting 0x83, received {recvPacketId}")
+
+        data = ""
+        if response_type == TOPIC_RESPONSE_STRING:
+            content_len -= 2
+        if response_type == TOPIC_RESPONSE_FLOAT:
+            content_len -= 1
+
+        response = sock.recv(content_len)
+        if len(response) < content_len:
+            raise Exception(f"Truncated response: {str(len(response))} of {str(content_len)}")
+
+        sock.close()
+        if response_type == TOPIC_RESPONSE_STRING:
+            data = urllib.parse.parse_qs(str(response, encoding='utf8'), keep_blank_values=True)
+
+        elif response_type == TOPIC_RESPONSE_FLOAT:
+            # Float type response, where the data returned is a floating point value.
+            data = struct.unpack('<f', response)[0]
+
+        else:
+            # No idea what response *this* is, but maybe it's something
+            # specific to a codebase we're not used to.
+            data = response
+
+        return (response_type, data)
 
     @group(name="ss13")
-    async def ss13(self, ctx: Context) -> None:
-        """Commands for checking ss13 server's info."""
+    async def ss13(self, ctx: Context):
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @ss13.command(name="servers")
-    async def servers_list(self, ctx: Context) -> None:
-        """Sends suppoted server list."""
-        self.fetch_servers()
-
-        embed = Embed(
-            title="Servers",
-            description="You can get information about this servers.\n\n",
-            colours=0x0984e3
-        )
-
-        for server in self.servers.values():
-            name: str = server["name"]
-            tags: list = server["tags"]
-            line = f"- **{name}**: " + ", ".join(tags) + "\n"
-            embed.description += line
-
-        await ctx.send(embed=embed)
-
     @ss13.command(name="status")
-    async def ss13_server_status(self, ctx: Context, server_tag: str) -> None:
-        """Sends server status."""
-        if self.is_server_supported(server_tag, "status") is False:
-            await ctx.send("Sorry, but this is not supported for this server.")
-            return
+    async def ss13_status(self, ctx: Context, server_name: str):
+        """Sends server's status topic."""
+        if self._is_server_supported(server_name) is False:
+            return await ctx.send("This server is not supported!")
 
-        ip, port, name, color = self.get_server_info(server_tag)
-        response = self.get_from_byond(ip, port, "status")
-        decoded = self.decode(response)
-
-        if response is None:
-            await ctx.send("Something goes wrong. I didn't recieved data from server.")
-            return
-
-        fields: dict = self.get_server_fields(server_tag, "status")
-
-        embed = Embed(title=name, colour=color)
-
-        for field in fields.values():
-            embed.add_field(name=field["name"], value=decoded[field["key"]], inline=field["inline"])
+        server_config = self._get_server_config(server_name)
+        response_type, data = self._send_query(
+            server_config["address"],
+            server_config["port"],
+            "?status"
+        )
+        embed = self._build_embed(server_config, data, "status")
 
         await ctx.send(embed=embed)
 

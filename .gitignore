@@ -154,7 +154,8 @@ incarn/resources/guilds
 
 # Events
 incarn/resources/events/*
-!incarn/resources/events/_*
+!incarn/resources/events/example-*
 
 # Info
-incarn/resources/info/_*
+incarn/resources/info/*
+!incarn/resources/info/example-*

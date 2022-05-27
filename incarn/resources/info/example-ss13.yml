@@ -1,0 +1,29 @@
+# Example Server
+Example_Server:
+
+  # Server's name
+  name: "Server Name"
+
+  # Server's color
+  color: 0xffffff
+
+  # Server's aliases. They should be in lowercase
+  aliases: ["server-name", "servername"]
+
+  # Server's address
+  address: "address"
+
+  # Server's port
+  port: 1010
+
+  # Server's embeds for requests
+  embeds:
+
+    # Embed for status
+    # - Name: Field's name
+    # - Key: key for data in server's response
+    # - inline: Should field be inline with others?
+    status:
+      field_one: {name: "FieldName", key: "Key for data in resposne", inline: True}
+      field_two: {name: "FieldName", key: "Key for data in resposne", inline: False}
+
