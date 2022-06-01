@@ -6,8 +6,8 @@ from typing import Optional
 
 from discord import Embed
 from discord.channel import TextChannel
-from discord.ext import tasks
-from discord.ext.commands import Cog
+from discord.ext import tasks, commands
+from discord.ext.commands import Cog, command, Context
 
 from incarn.bot import IncarnBot
 from incarn.constants import Channels
@@ -122,6 +122,14 @@ class Events(Cog):
             await channel.send(embed=embed)
 
         log.debug("Finished fetching holidays")
+
+    @command()
+    async def manual_check_events(self, ctx: Context):
+        await self.check_day()
+
+    async def cog_check(self, ctx: Context) -> bool:
+        """Only allow owners to invoke the commands in this cog."""
+        return await commands.is_owner().predicate(ctx)
 
 
 def setup(bot: IncarnBot) -> None:
